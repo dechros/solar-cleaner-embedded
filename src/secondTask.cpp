@@ -6,10 +6,10 @@ void vSecondTask(void *pvParameters)
 
     while (true)
     {
-        xSemaphoreTake(xSerialMutex, portMAX_DELAY);
-        Serial.println("Second");
-        xSemaphoreGive(xSerialMutex);
+        serialWrite("Second");
         vTaskDelay(500 / portTICK_PERIOD_MS);
-        taskYIELD();
+        /**
+         * TODO: Convert this task to taskYIELD();
+         */
     }
 }
