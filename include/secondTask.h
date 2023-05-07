@@ -12,8 +12,7 @@
 #ifndef _SECOND_TASK_H_
 #define _SECOND_TASK_H_
 
-#include "globals.h"
-#include "serialParser.h"
+#include "threadSafeSerial.h"
 
 /**
  * @brief

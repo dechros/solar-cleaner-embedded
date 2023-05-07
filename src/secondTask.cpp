@@ -6,10 +6,7 @@ void vSecondTask(void *pvParameters)
 
     while (true)
     {
-        serialWrite("Second");
+        SerialPrintln("Second");
         vTaskDelay(500 / portTICK_PERIOD_MS);
-        /**
-         * TODO: Convert this task to taskYIELD();
-         */
     }
 }
