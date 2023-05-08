@@ -14,16 +14,8 @@
 
 #include <Arduino.h>
 #include "Arduino_FreeRTOS.h"
-#include "pinDefinitions.h"
 
 extern TaskHandle_t xSerialParserTaskHandle;
 extern TaskHandle_t xSecondTaskHandle;
-
-/**
- * @brief This function initializes all pins as INPUT or OUTPUT
- *        
- * @note UART and SPI pins are pre-configured in Arduino libraries.
- */
-void InitializePins(void);
 
 #endif /* _GLOBALS_H_ */

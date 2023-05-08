@@ -1,6 +1,12 @@
 #ifndef _PIN_DEFINITIONS_H_
 #define _PIN_DEFINITIONS_H_
 
+#define PJ2_PCINT11_PIN                     (70)
+#define PJ3_PCINT12_PIN                     (71)
+#define PJ4_PCINT13_PIN                     (72)
+#define PJ5_PCINT14_PIN                     (73)
+#define PJ6_PCINT15_PIN                     (74)
+
 #define BRUSHES_SPEED_CONTROL_PIN           (13)
 #define BRUSHES_FORWARD_TURN_PIN            (12)
 #define BRUSHES_STOP_PIN                    (11)
@@ -28,7 +34,7 @@
 #define MCP_2515_SPI_MISO_PIN               (50)
 #define MCP_2515_SPI_CLK_PIN                (52)
 #define MCP_2515_SPI_CS_PIN                 (36)
-#define MCP_2515_SPI_INTERRUPT_PIN          (-1) /* Yet to decide */
+#define MCP_2515_SPI_INTERRUPT_PIN          PJ2_PCINT11_PIN
 
 #define RESERVED_PIN_2                      (2)
 #define RESERVED_PIN_A0                     PIN_A0 
