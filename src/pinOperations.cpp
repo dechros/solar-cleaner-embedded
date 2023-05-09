@@ -6,7 +6,7 @@ void InitializePins()
     pinMode(BRUSHES_SPEED_CONTROL_PIN, OUTPUT);
     pinMode(BRUSHES_FORWARD_TURN_PIN , OUTPUT);
     pinMode(BRUSHES_STOP_PIN         , OUTPUT);
-    pinMode(BRUSHES_BACKWARD_TURN_PIN, OUTPUT);
+    pinMode(BRUSHES_REVERSE_TURN_PIN, OUTPUT);
     pinMode(BRUSHES_ERROR_PIN        , INPUT);
 
     pinMode(WATER_ON_OFF_PIN, OUTPUT);
@@ -14,20 +14,45 @@ void InitializePins()
     pinMode(PALLET_LEFT_SPEED_CONTROL_PIN, OUTPUT);
     pinMode(PALLET_LEFT_FORWARD_TURN_PIN , OUTPUT);
     pinMode(PALLET_LEFT_STOP_PIN         , OUTPUT);
-    pinMode(PALLET_LEFT_BACKWARD_TURN_PIN, OUTPUT);
+    pinMode(PALLET_LEFT_REVERSE_TURN_PIN, OUTPUT);
     pinMode(PALLET_LEFT_ERROR_PIN        , INPUT);
 
     pinMode(PALLET_RIGHT_SPEED_CONTROL_PIN, OUTPUT);
     pinMode(PALLET_RIGHT_FORWARD_TURN_PIN , OUTPUT);
     pinMode(PALLET_RIGHT_STOP_PIN         , OUTPUT);
-    pinMode(PALLET_RIGHT_BACKWARD_TURN_PIN, OUTPUT);
+    pinMode(PALLET_RIGHT_REVERSE_TURN_PIN, OUTPUT);
     pinMode(PALLET_RIGHT_ERROR_PIN        , INPUT);
 
+    pinMode(ENCODER_1_A_PIN, INPUT);
+    pinMode(ENCODER_1_B_PIN, INPUT);
+    pinMode(ENCODER_1_0_PIN, INPUT);
+    pinMode(ENCODER_2_A_PIN, INPUT);
+    pinMode(ENCODER_2_B_PIN, INPUT);
+    pinMode(ENCODER_2_0_PIN, INPUT);
+
     pinModeExtended(PORT_J, PJ2, INPUT);
+
     enableInterrupt(PJ2_PCINT11_PIN, MCP2515InterruptCallback, RISING);
+    enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptCallback, RISING);
+    enableInterrupt(ENCODER_1_B_PIN, Encoder1InterruptCallback, RISING);
+    enableInterrupt(ENCODER_1_0_PIN, Encoder1InterruptCallback, RISING);
+    enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptCallback, RISING);
+    enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptCallback, RISING);
+    enableInterrupt(ENCODER_2_0_PIN, Encoder2InterruptCallback, RISING);
+
 }
 
 void MCP2515InterruptCallback()
+{
+    /* TODO: Implement Logic */
+}
+
+void Encoder1InterruptCallback()
+{
+    /* TODO: Implement Logic */
+}
+
+void Encoder2InterruptCallback()
 {
     /* TODO: Implement Logic */
 }

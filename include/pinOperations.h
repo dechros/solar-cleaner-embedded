@@ -57,3 +57,15 @@ void digitalWriteExtended(uint8_t pin, uint8_t val);
  * 
  */
 void MCP2515InterruptCallback(void);
+
+/**
+ * @brief 
+ * 
+ */
+void Encoder1InterruptCallback(void);
+
+/**
+ * @brief 
+ * 
+ */
+void Encoder2InterruptCallback(void);
