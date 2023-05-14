@@ -1,12 +1,24 @@
+/**
+ * @file pinOperations.cpp
+ * @author Talha Cetin (talhacetin96@hotmail.com)
+ * @brief This source file contains pin related functions, 
+ *        non-mapped and standart pin interrupt handlers.
+ * @version 0.1
+ * @date 2023-05-12
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include "pinOperations.h"
 #include "EnableInterrupt.h"
 
-void InitializePins()
+void ConfigurePins()
 {
     pinMode(BRUSHES_SPEED_CONTROL_PIN, OUTPUT);
     pinMode(BRUSHES_FORWARD_TURN_PIN , OUTPUT);
     pinMode(BRUSHES_STOP_PIN         , OUTPUT);
-    pinMode(BRUSHES_REVERSE_TURN_PIN, OUTPUT);
+    pinMode(BRUSHES_REVERSE_TURN_PIN , OUTPUT);
     pinMode(BRUSHES_ERROR_PIN        , INPUT);
 
     pinMode(WATER_ON_OFF_PIN, OUTPUT);
@@ -14,32 +26,31 @@ void InitializePins()
     pinMode(PALLET_LEFT_SPEED_CONTROL_PIN, OUTPUT);
     pinMode(PALLET_LEFT_FORWARD_TURN_PIN , OUTPUT);
     pinMode(PALLET_LEFT_STOP_PIN         , OUTPUT);
-    pinMode(PALLET_LEFT_REVERSE_TURN_PIN, OUTPUT);
+    pinMode(PALLET_LEFT_REVERSE_TURN_PIN , OUTPUT);
     pinMode(PALLET_LEFT_ERROR_PIN        , INPUT);
 
     pinMode(PALLET_RIGHT_SPEED_CONTROL_PIN, OUTPUT);
     pinMode(PALLET_RIGHT_FORWARD_TURN_PIN , OUTPUT);
     pinMode(PALLET_RIGHT_STOP_PIN         , OUTPUT);
-    pinMode(PALLET_RIGHT_REVERSE_TURN_PIN, OUTPUT);
+    pinMode(PALLET_RIGHT_REVERSE_TURN_PIN , OUTPUT);
     pinMode(PALLET_RIGHT_ERROR_PIN        , INPUT);
 
-    pinMode(ENCODER_1_A_PIN, INPUT);
-    pinMode(ENCODER_1_B_PIN, INPUT);
-    pinMode(ENCODER_1_0_PIN, INPUT);
-    pinMode(ENCODER_2_A_PIN, INPUT);
-    pinMode(ENCODER_2_B_PIN, INPUT);
-    pinMode(ENCODER_2_0_PIN, INPUT);
+    pinMode(ENCODER_1_A_PIN, INPUT_PULLUP);
+    pinMode(ENCODER_1_B_PIN, INPUT_PULLUP);
+    pinMode(ENCODER_1_0_PIN, INPUT_PULLUP);
+    pinMode(ENCODER_2_A_PIN, INPUT_PULLUP);
+    pinMode(ENCODER_2_B_PIN, INPUT_PULLUP);
+    pinMode(ENCODER_2_0_PIN, INPUT_PULLUP);
 
     pinModeExtended(PORT_J, PJ2, INPUT);
 
     enableInterrupt(PJ2_PCINT11_PIN, MCP2515InterruptCallback, RISING);
-    enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptCallback, RISING);
-    enableInterrupt(ENCODER_1_B_PIN, Encoder1InterruptCallback, RISING);
-    enableInterrupt(ENCODER_1_0_PIN, Encoder1InterruptCallback, RISING);
-    enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptCallback, RISING);
-    enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptCallback, RISING);
-    enableInterrupt(ENCODER_2_0_PIN, Encoder2InterruptCallback, RISING);
-
+    enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptACallback, RISING);
+    enableInterrupt(ENCODER_1_B_PIN, Encoder1InterruptBCallback, RISING);
+    enableInterrupt(ENCODER_1_0_PIN, Encoder1Interrupt0Callback, RISING);
+    enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptACallback, RISING);
+    enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptBCallback, RISING);
+    enableInterrupt(ENCODER_2_0_PIN, Encoder2Interrupt0Callback, RISING);
 }
 
 void MCP2515InterruptCallback()
@@ -47,14 +58,40 @@ void MCP2515InterruptCallback()
     /* TODO: Implement Logic */
 }
 
-void Encoder1InterruptCallback()
+void Encoder1InterruptACallback()
 {
     /* TODO: Implement Logic */
+    SerialPrintln("1ACallBack!");
 }
 
-void Encoder2InterruptCallback()
+void Encoder1InterruptBCallback()
 {
     /* TODO: Implement Logic */
+    SerialPrintln("1BCallBack!");
+}
+
+void Encoder1Interrupt0Callback()
+{
+    /* TODO: Implement Logic */
+    SerialPrintln("10CallBack!");
+}
+
+void Encoder2InterruptACallback()
+{
+    /* TODO: Implement Logic */
+    SerialPrintln("2ACallBack!");
+}
+
+void Encoder2InterruptBCallback()
+{
+    /* TODO: Implement Logic */
+    SerialPrintln("2BCallBack!");
+}
+
+void Encoder2Interrupt0Callback()
+{
+    /* TODO: Implement Logic */
+    SerialPrintln("20CallBack!");
 }
 
 int digitalReadExtended(uint8_t pin)

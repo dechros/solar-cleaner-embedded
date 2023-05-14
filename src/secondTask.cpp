@@ -3,10 +3,11 @@
 void vSecondTask(void *pvParameters)
 {
     configASSERT(((uint32_t)pvParameters) == 1);
-
+    TickType_t xLastWakeTime;
+    xLastWakeTime = xTaskGetTickCount();
     while (true)
     {
         SerialPrintln("Second");
-        vTaskDelay(500 / portTICK_PERIOD_MS);
+        vTaskDelayUntil(&xLastWakeTime, 200);
     }
 }

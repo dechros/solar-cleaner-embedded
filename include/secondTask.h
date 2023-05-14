@@ -1,9 +1,9 @@
 /**
  * @file secondTask.h
- * @author Halit Cetin (halitcetin@live.com)
+ * @author Talha Cetin (talhacetin96@hotmail.com)
  * @brief 
  * @version 0.1
- * @date 04-05-2023
+ * @date 2023-05-12
  * 
  * @copyright Copyright (c) 2023
  * 

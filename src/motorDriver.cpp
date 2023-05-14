@@ -1,61 +1,85 @@
+/**
+ * @file motorDriver.cpp
+ * @author Talha Cetin (talhacetin96@hotmail.com)
+ * @brief Motor driver library source file for 
+ *        all three motors in the system.
+ * @version 0.1
+ * @date 2023-05-12
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include "motorDriver.h"
     
 void InitializeMotors()
 {
     digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, LOW);
     digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, HIGH);
-    digitalWrite(PALLET_RIGHT_STOP_PIN, HIGH);
+    digitalWrite(PALLET_RIGHT_STOP_PIN, LOW);
 
     digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
     digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
-    digitalWrite(PALLET_LEFT_STOP_PIN, HIGH);
+    digitalWrite(PALLET_LEFT_STOP_PIN, LOW);
 
     digitalWrite(BRUSHES_FORWARD_TURN_PIN, LOW);
-    digitalWrite(BRUSHES_REVERSE_TURN_PIN, HIGH);
-    digitalWrite(BRUSHES_STOP_PIN, HIGH);
+    digitalWrite(BRUSHES_REVERSE_TURN_PIN, LOW);
+    digitalWrite(BRUSHES_STOP_PIN, LOW);
+
+    analogWrite(PALLET_RIGHT_SPEED_CONTROL_PIN, 0);
+    analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, 0);
+    analogWrite(BRUSHES_SPEED_CONTROL_PIN, 0);
 }
 
-void MotorStart(Motor_t motorType)
+void MotorStartStop(Motor_t motorType, uint8_t startStop)
 {
-    if (motorType == RIGHT_PALLET)
+    switch (motorType)
     {
-        digitalWrite(PALLET_RIGHT_STOP_PIN, HIGH);
-    }
-    else if(motorType == LEFT_PALLET)
-    {
-        digitalWrite(PALLET_LEFT_STOP_PIN, HIGH);
-    }
-    else if(motorType == BRUSHES)
-    {
-        digitalWrite(BRUSHES_STOP_PIN, HIGH);
-    }
-    else
-    {
-        SerialPrintln("MotorStart: Unknown Motor!");
+        case RIGHT_PALLET:
+        {
+            if (startStop == STOP)
+            {
+                digitalWrite(PALLET_RIGHT_STOP_PIN, LOW);
+            }
+            else if (startStop == START)
+            {
+                digitalWrite(PALLET_RIGHT_STOP_PIN, HIGH);
+            }
+            break;
+        }
+        case LEFT_PALLET:
+        {
+            if (startStop == STOP)
+            {
+                digitalWrite(PALLET_LEFT_STOP_PIN, LOW);
+            }
+            else if (startStop == START)
+            {
+                digitalWrite(PALLET_LEFT_STOP_PIN, HIGH);
+            }
+            break;
+        }
+        case BRUSHES:
+        {
+            if (startStop == STOP)
+            {
+                digitalWrite(BRUSHES_STOP_PIN, LOW);
+            }
+            else if (startStop == START)
+            {
+                digitalWrite(BRUSHES_STOP_PIN, HIGH);
+            }
+            break;
+        }
+        default:
+        {
+            SerialPrintln("MotorStop: Unknown Motor!");
+            break;
+        }
     }
 }
 
-void MotorStop(Motor_t motorType)
-{
-    if (motorType == RIGHT_PALLET)
-    {
-        digitalWrite(PALLET_RIGHT_STOP_PIN, LOW);
-    }
-    else if(motorType == LEFT_PALLET)
-    {
-        digitalWrite(PALLET_LEFT_STOP_PIN, LOW);
-    }
-    else if(motorType == BRUSHES)
-    {
-        digitalWrite(BRUSHES_STOP_PIN, LOW);
-    }
-    else
-    {
-        SerialPrintln("MotorStop: Unknown Motor!");
-    }
-}
-
-void MotorRotationChange(Motor_t motorType, Direction_t direction)
+void MotorRotationChange(Motor_t motorType, uint8_t direction)
 {
     if (motorType == RIGHT_PALLET)
     {
@@ -111,5 +135,25 @@ void MotorRotationChange(Motor_t motorType, Direction_t direction)
     else
     {
         SerialPrintln("MotorRotationChange: Unknown Motor!");
+    }
+}
+
+void MotorSpeedChange(Motor_t motorType, uint8_t speed)
+{
+    if (motorType == RIGHT_PALLET)
+    {
+        analogWrite(PALLET_RIGHT_SPEED_CONTROL_PIN, speed);
+    }
+    else if(motorType == LEFT_PALLET)
+    {
+        analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, speed);
+    }
+    else if(motorType == BRUSHES)
+    {
+        analogWrite(BRUSHES_SPEED_CONTROL_PIN, speed);
+    }
+    else
+    {
+        SerialPrintln("MotorSpeedChange: Unknown Motor!");
     }
 }

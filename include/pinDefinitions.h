@@ -1,3 +1,14 @@
+/**
+ * @file pinDefinitions.h
+ * @author Talha Cetin (talhacetin96@hotmail.com)
+ * @brief A header file that contains pin definitions of the project.
+ * @version 0.1
+ * @date 2023-05-12
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef _PIN_DEFINITIONS_H_
 #define _PIN_DEFINITIONS_H_
 
@@ -50,6 +61,5 @@
 #define RESERVED_PIN_A1                     PIN_A1 
 #define RESERVED_PIN_A2                     PIN_A2 
 #define RESERVED_PIN_A3                     PIN_A3 
-
 
 #endif /* _PIN_DEFINITIONS_H_ */
