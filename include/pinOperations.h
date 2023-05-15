@@ -10,6 +10,9 @@
  * 
  */
 
+#ifndef _PIN_OPERATIONS_H_
+#define _PIN_OPERATIONS_H_
+
 #include <Arduino.h>
 #include "pinDefinitions.h"
 #include "threadSafeSerial.h"
@@ -33,10 +36,42 @@ enum
 };
 
 /**
- * @brief This function configures pins IO modes and enables interrupts.
+ * @brief This function initializes pins IO modes and enables interrupts.
  * 
  */
-void ConfigurePins(void);
+void InitializePins(void);
+
+/**
+ * @brief Thread safe digitalRead() with extended pins
+ * 
+ * @param pin pin number
+ * @return int value
+ */
+int DigitalReadThreadSafe(uint8_t pin);
+
+/**
+ * @brief Thread safe digitalWrite() with extended pins
+ * 
+ * @param pin pin number
+ * @return int value
+ */
+void DigitalWriteThreadSafe(uint8_t pin, uint8_t val);
+
+/**
+ * @brief Thread safe analogWrite() with extended pins
+ * 
+ * @param pin pin number
+ * @param val value
+ */
+void AnalogWriteThreadSafe(uint8_t pin, uint8_t val);
+
+/**
+ * @brief Thread safe analogRead()
+ * 
+ * @param pin pin number
+ * @return int value
+ */
+int AnalogReadThreadSafe(uint8_t pin);
 
 /**
  * @brief This function is used for non-mapped pin's digitalRead operation.
@@ -105,3 +140,5 @@ void Encoder2InterruptBCallback(void);
  * 
  */
 void Encoder2Interrupt0Callback(void);
+
+#endif /* _PIN_OPERATIONS_H_ */

@@ -15,7 +15,7 @@
 
 #include "stdint.h"
 #include "threadSafeSerial.h"
-#include "pinDefinitions.h"
+#include "pinOperations.h"
 
 typedef enum
 {

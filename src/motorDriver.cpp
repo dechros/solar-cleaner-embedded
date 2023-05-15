@@ -39,11 +39,11 @@ void MotorStartStop(Motor_t motorType, uint8_t startStop)
         {
             if (startStop == STOP)
             {
-                digitalWrite(PALLET_RIGHT_STOP_PIN, LOW);
+                DigitalWriteThreadSafe(PALLET_RIGHT_STOP_PIN, LOW);
             }
             else if (startStop == START)
             {
-                digitalWrite(PALLET_RIGHT_STOP_PIN, HIGH);
+                DigitalWriteThreadSafe(PALLET_RIGHT_STOP_PIN, HIGH);
             }
             break;
         }
@@ -51,11 +51,11 @@ void MotorStartStop(Motor_t motorType, uint8_t startStop)
         {
             if (startStop == STOP)
             {
-                digitalWrite(PALLET_LEFT_STOP_PIN, LOW);
+                DigitalWriteThreadSafe(PALLET_LEFT_STOP_PIN, LOW);
             }
             else if (startStop == START)
             {
-                digitalWrite(PALLET_LEFT_STOP_PIN, HIGH);
+                DigitalWriteThreadSafe(PALLET_LEFT_STOP_PIN, HIGH);
             }
             break;
         }
@@ -63,11 +63,11 @@ void MotorStartStop(Motor_t motorType, uint8_t startStop)
         {
             if (startStop == STOP)
             {
-                digitalWrite(BRUSHES_STOP_PIN, LOW);
+                DigitalWriteThreadSafe(BRUSHES_STOP_PIN, LOW);
             }
             else if (startStop == START)
             {
-                digitalWrite(BRUSHES_STOP_PIN, HIGH);
+                DigitalWriteThreadSafe(BRUSHES_STOP_PIN, HIGH);
             }
             break;
         }
@@ -85,13 +85,13 @@ void MotorRotationChange(Motor_t motorType, uint8_t direction)
     {
         if (direction == FORWARD)
         {
-            digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, LOW);
-            digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, HIGH);
+            DigitalWriteThreadSafe(PALLET_RIGHT_FORWARD_TURN_PIN, LOW);
+            DigitalWriteThreadSafe(PALLET_RIGHT_REVERSE_TURN_PIN, HIGH);
         }
         else if(direction == REVERSE)
         {
-            digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, LOW);
-            digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, HIGH);
+            DigitalWriteThreadSafe(PALLET_RIGHT_REVERSE_TURN_PIN, LOW);
+            DigitalWriteThreadSafe(PALLET_RIGHT_FORWARD_TURN_PIN, HIGH);
         }
         else
         {
@@ -102,13 +102,13 @@ void MotorRotationChange(Motor_t motorType, uint8_t direction)
     {
         if (direction == FORWARD)
         {
-            digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
-            digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
+            DigitalWriteThreadSafe(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
+            DigitalWriteThreadSafe(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
         }
         else if(direction == REVERSE)
         {
-            digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, LOW);
-            digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, HIGH);
+            DigitalWriteThreadSafe(PALLET_LEFT_REVERSE_TURN_PIN, LOW);
+            DigitalWriteThreadSafe(PALLET_LEFT_FORWARD_TURN_PIN, HIGH);
         }
         else
         {
@@ -119,13 +119,13 @@ void MotorRotationChange(Motor_t motorType, uint8_t direction)
     {
         if (direction == FORWARD)
         {
-            digitalWrite(BRUSHES_FORWARD_TURN_PIN, LOW);
-            digitalWrite(BRUSHES_REVERSE_TURN_PIN, HIGH);
+            DigitalWriteThreadSafe(BRUSHES_FORWARD_TURN_PIN, LOW);
+            DigitalWriteThreadSafe(BRUSHES_REVERSE_TURN_PIN, HIGH);
         }
         else if(direction == REVERSE)
         {
-            digitalWrite(BRUSHES_REVERSE_TURN_PIN, LOW);
-            digitalWrite(BRUSHES_FORWARD_TURN_PIN, HIGH);
+            DigitalWriteThreadSafe(BRUSHES_REVERSE_TURN_PIN, LOW);
+            DigitalWriteThreadSafe(BRUSHES_FORWARD_TURN_PIN, HIGH);
         }
         else
         {
@@ -142,15 +142,15 @@ void MotorSpeedChange(Motor_t motorType, uint8_t speed)
 {
     if (motorType == RIGHT_PALLET)
     {
-        analogWrite(PALLET_RIGHT_SPEED_CONTROL_PIN, speed);
+        AnalogWriteThreadSafe(PALLET_RIGHT_SPEED_CONTROL_PIN, speed);
     }
     else if(motorType == LEFT_PALLET)
     {
-        analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, speed);
+        AnalogWriteThreadSafe(PALLET_LEFT_SPEED_CONTROL_PIN, speed);
     }
     else if(motorType == BRUSHES)
     {
-        analogWrite(BRUSHES_SPEED_CONTROL_PIN, speed);
+        AnalogWriteThreadSafe(BRUSHES_SPEED_CONTROL_PIN, speed);
     }
     else
     {

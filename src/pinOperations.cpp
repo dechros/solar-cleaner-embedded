@@ -13,8 +13,16 @@
 #include "pinOperations.h"
 #include "EnableInterrupt.h"
 
-void ConfigurePins()
+SemaphoreHandle_t xPinMutex;
+
+void InitializePins()
 {
+    xPinMutex = xSemaphoreCreateMutex();
+    if(xPinMutex == NULL)
+    {
+        SerialPrintln("xPinMutex Create Error!");
+        while (true);
+    }
     pinMode(BRUSHES_SPEED_CONTROL_PIN, OUTPUT);
     pinMode(BRUSHES_FORWARD_TURN_PIN , OUTPUT);
     pinMode(BRUSHES_STOP_PIN         , OUTPUT);
@@ -92,6 +100,51 @@ void Encoder2Interrupt0Callback()
 {
     /* TODO: Implement Logic */
     SerialPrintln("20CallBack!");
+}
+
+int DigitalReadThreadSafe(uint8_t pin)
+{
+    int pinValue = 0;
+    xSemaphoreTake(xPinMutex, portMAX_DELAY);
+    if (pin >= 70)
+    {
+        pinValue = digitalReadExtended(pin);
+    }
+    else
+    {
+        pinValue = digitalRead(pin);
+    }
+    xSemaphoreGive(xPinMutex);
+    return pinValue;
+}
+
+void DigitalWriteThreadSafe(uint8_t pin, uint8_t val)
+{
+    xSemaphoreTake(xPinMutex, portMAX_DELAY);
+    if (pin >= 70)
+    {
+        digitalWriteExtended(pin, val);
+    }
+    else
+    {
+        digitalWrite(pin, val);
+    }
+    xSemaphoreGive(xPinMutex);
+}
+
+void AnalogWriteThreadSafe(uint8_t pin, uint8_t val)
+{
+    xSemaphoreTake(xPinMutex, portMAX_DELAY);
+    analogWrite(pin, val);
+    xSemaphoreGive(xPinMutex);
+}
+
+int AnalogReadThreadSafe(uint8_t pin)
+{
+    xSemaphoreTake(xPinMutex, portMAX_DELAY);
+    int value = analogRead(pin);
+    xSemaphoreGive(xPinMutex);
+    return value;
 }
 
 int digitalReadExtended(uint8_t pin)

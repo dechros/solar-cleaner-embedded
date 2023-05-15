@@ -51,7 +51,7 @@
 
 #include "globals.h"
 #include "serialParserTask.h"
-#include "secondTask.h"
+#include "readInputPinsTask.h"
 #include "pinOperations.h"
 #include "motorDriver.h"
 #include "waterPumpDriver.h"
@@ -60,10 +60,10 @@
 
 void setup()
 {
-    ConfigurePins();
+    InitializePins();
     InitializeMotors();
-    WaterPumpOff();
     InitializeEEPROM();
+    WaterPumpOff();
     SerialBegin(9600);
 
     BaseType_t xReturned;
@@ -77,8 +77,8 @@ void setup()
     {
         SerialPrintln("vSerialParserTask Created Successfully!");
     }
-    xReturned = xTaskCreate(vSecondTask, 
-                        "vSecondTask", 
+    xReturned = xTaskCreate(vReadInputPinsTask, 
+                        "vReadInputPinsTask", 
                         configMINIMAL_STACK_SIZE, 
                         (void *)1, 
                         tskIDLE_PRIORITY, 
