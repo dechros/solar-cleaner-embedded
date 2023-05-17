@@ -11,7 +11,7 @@
  */
 
 #include "pinOperations.h"
-#include "EnableInterrupt.h"
+//#include "EnableInterrupt.h"
 
 SemaphoreHandle_t xPinMutex;
 
@@ -52,13 +52,13 @@ void InitializePins()
 
     pinModeExtended(PORT_J, PJ2, INPUT);
 
-    enableInterrupt(PJ2_PCINT11_PIN, MCP2515InterruptCallback, RISING);
-    enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptACallback, RISING);
-    enableInterrupt(ENCODER_1_B_PIN, Encoder1InterruptBCallback, RISING);
-    enableInterrupt(ENCODER_1_0_PIN, Encoder1Interrupt0Callback, RISING);
-    enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptACallback, RISING);
-    enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptBCallback, RISING);
-    enableInterrupt(ENCODER_2_0_PIN, Encoder2Interrupt0Callback, RISING);
+    //enableInterrupt(PJ2_PCINT11_PIN, MCP2515InterruptCallback, RISING);
+    //enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptACallback, RISING);
+    //enableInterrupt(ENCODER_1_B_PIN, Encoder1InterruptBCallback, RISING);
+    //enableInterrupt(ENCODER_1_0_PIN, Encoder1Interrupt0Callback, RISING);
+    //enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptACallback, RISING);
+    //enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptBCallback, RISING);
+    //enableInterrupt(ENCODER_2_0_PIN, Encoder2Interrupt0Callback, RISING);
 }
 
 void MCP2515InterruptCallback()
