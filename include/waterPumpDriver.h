@@ -13,7 +13,7 @@
 #define _WATER_PUMP_DRIVER_H_
 
 #include <Arduino.h>
-#include "pinDefinitions.h"
+#include "pinOperations.h"
 
 /**
  * @brief Opens the water pump by writing HIGH to related pin.

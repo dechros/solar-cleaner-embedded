@@ -13,10 +13,10 @@
 
 void WaterPumpOn()
 {
-    digitalWrite(WATER_ON_OFF_PIN, HIGH);
+    DigitalWriteThreadSafe(WATER_ON_OFF_PIN, HIGH);
 }
 
 void WaterPumpOff()
 {
-    digitalWrite(WATER_ON_OFF_PIN, LOW);
+    DigitalWriteThreadSafe(WATER_ON_OFF_PIN, LOW);
 }
