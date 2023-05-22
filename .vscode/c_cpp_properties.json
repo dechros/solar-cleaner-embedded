@@ -8,12 +8,14 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "c:/Project/solarCleanerEmbedded/include",
-                "c:/Project/solarCleanerEmbedded/src",
-                "c:/Project/solarCleanerEmbedded/.pio/libdeps/megaatmega2560/FreeRTOS/src",
+                "c:/CodeProjects/Project/solarCleanerEmbedded/include",
+                "c:/CodeProjects/Project/solarCleanerEmbedded/src",
+                "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "c:/CodeProjects/Project/solarCleanerEmbedded/.pio/libdeps/megaatmega2560/EnableInterrupt",
+                "c:/CodeProjects/Project/solarCleanerEmbedded/.pio/libdeps/megaatmega2560/EnableInterrupt/utility",
+                "c:/CodeProjects/Project/solarCleanerEmbedded/.pio/libdeps/megaatmega2560/FreeRTOS/src",
                 "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/variants/mega",
-                "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                 "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                 "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
@@ -23,12 +25,14 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "c:/Project/solarCleanerEmbedded/include",
-                    "c:/Project/solarCleanerEmbedded/src",
-                    "c:/Project/solarCleanerEmbedded/.pio/libdeps/megaatmega2560/FreeRTOS/src",
+                    "c:/CodeProjects/Project/solarCleanerEmbedded/include",
+                    "c:/CodeProjects/Project/solarCleanerEmbedded/src",
+                    "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "c:/CodeProjects/Project/solarCleanerEmbedded/.pio/libdeps/megaatmega2560/EnableInterrupt",
+                    "c:/CodeProjects/Project/solarCleanerEmbedded/.pio/libdeps/megaatmega2560/EnableInterrupt/utility",
+                    "c:/CodeProjects/Project/solarCleanerEmbedded/.pio/libdeps/megaatmega2560/FreeRTOS/src",
                     "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/variants/mega",
-                    "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                     "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                     "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "C:/Users/oguzs/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
@@ -37,7 +41,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=60106",
+                "PLATFORMIO=60107",
                 "ARDUINO_AVR_MEGA2560",
                 "F_CPU=16000000L",
                 "ARDUINO_ARCH_AVR",
