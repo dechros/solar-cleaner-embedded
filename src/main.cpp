@@ -6,13 +6,13 @@
 
 void setup()
 {
-  startESP32Server();
+  //startESP32Server();
 }
 
 void loop()
 {
-    delay(1000);
-    sendString("salak salak isler");
+    //delay(1000);
+    //sendString("salak salak isler");
 }
 
 

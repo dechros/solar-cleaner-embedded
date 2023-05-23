@@ -37,14 +37,14 @@ void startESP32Client()
     sendATCommand("AT+PASSCHANNEL=1"); // Serial to Ethernet mode (default mode)
     delay(2000);                       // Wait for the mode change
 
-    sendATCommand("AT+CIPETH_DEF=\"192.168.1.254\",\"192.168.1.1\",\"255.255.255.0\""); // Reset the module
+    sendATCommand("AT+CIPETH_DEF=\"192.168.1.250\",\"192.168.1.1\",\"255.255.255.0\""); // Reset the module
     delay(2000);                                                                        // Wait for the ip change
 
-    sendATCommand("AT+CIPSTART=\"TCPC\",\"192.168.1.50\",1234"); // Connect to the TCPC server
+    sendATCommand("AT+CIPSTART=\"TCPC\",\"192.168.1.254\",5678"); // Connect to the TCP server
     delay(2000);                                                 // Wait for connect
 
-    sendATCommand("ATE0");
-    delay(2000);
+    //sendATCommand("ATE0");
+    //delay(2000);
 }
 
 void startESP32Server()
@@ -64,15 +64,15 @@ void startESP32Server()
     sendATCommand("AT+CIPETH_DEF=\"192.168.1.254\",\"192.168.1.1\",\"255.255.255.0\""); // Reset the module
     delay(2000);                                                                        // Wait for the ip change
 
-    sendATCommand("AT+CIPSTART=\"TCPS\",\"192.168.1.50\",1234,5678"); // Connect to the TCPC server
+    sendATCommand("AT+CIPSTART=\"TCPS\",\"192.168.1.50\",1234,5678"); // Connect to the TCP server
     delay(2000);                                                 // Wait for connect
 
-    sendATCommand("ATE0");
-    delay(2000);
+    //sendATCommand("ATE0");
+    //delay(2000);
 }
 
 void sendString(char const *sentence)
 {
-    sendATCommand("AT+CIPSEND=4");
-    sendATCommand(sentence)
+    sendATCommand("AT+CIPSEND=19");
+    sendATCommand(sentence);
 }
