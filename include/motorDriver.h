@@ -14,7 +14,6 @@
 #define _MOTOR_DRIVER_H_
 
 #include "stdint.h"
-#include "threadSafeSerial.h"
 #include "pinOperations.h"
 
 typedef enum

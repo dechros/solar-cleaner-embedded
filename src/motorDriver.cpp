@@ -39,11 +39,11 @@ void MotorStartStop(Motor_t motorType, uint8_t startStop)
         {
             if (startStop == STOP)
             {
-                DigitalWriteThreadSafe(PALLET_RIGHT_STOP_PIN, LOW);
+                digitalWrite(PALLET_RIGHT_STOP_PIN, LOW);
             }
             else if (startStop == START)
             {
-                DigitalWriteThreadSafe(PALLET_RIGHT_STOP_PIN, HIGH);
+                digitalWrite(PALLET_RIGHT_STOP_PIN, HIGH);
             }
             break;
         }
@@ -51,11 +51,11 @@ void MotorStartStop(Motor_t motorType, uint8_t startStop)
         {
             if (startStop == STOP)
             {
-                DigitalWriteThreadSafe(PALLET_LEFT_STOP_PIN, LOW);
+                digitalWrite(PALLET_LEFT_STOP_PIN, LOW);
             }
             else if (startStop == START)
             {
-                DigitalWriteThreadSafe(PALLET_LEFT_STOP_PIN, HIGH);
+                digitalWrite(PALLET_LEFT_STOP_PIN, HIGH);
             }
             break;
         }
@@ -63,17 +63,17 @@ void MotorStartStop(Motor_t motorType, uint8_t startStop)
         {
             if (startStop == STOP)
             {
-                DigitalWriteThreadSafe(BRUSHES_STOP_PIN, LOW);
+                digitalWrite(BRUSHES_STOP_PIN, LOW);
             }
             else if (startStop == START)
             {
-                DigitalWriteThreadSafe(BRUSHES_STOP_PIN, HIGH);
+                digitalWrite(BRUSHES_STOP_PIN, HIGH);
             }
             break;
         }
         default:
         {
-            SerialPrintln("MotorStop: Unknown Motor!");
+            Serial.println("MotorStop: Unknown Motor!");
             break;
         }
     }
@@ -85,56 +85,56 @@ void MotorRotationChange(Motor_t motorType, uint8_t direction)
     {
         if (direction == FORWARD)
         {
-            DigitalWriteThreadSafe(PALLET_RIGHT_FORWARD_TURN_PIN, LOW);
-            DigitalWriteThreadSafe(PALLET_RIGHT_REVERSE_TURN_PIN, HIGH);
+            digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, LOW);
+            digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, HIGH);
         }
         else if(direction == REVERSE)
         {
-            DigitalWriteThreadSafe(PALLET_RIGHT_REVERSE_TURN_PIN, LOW);
-            DigitalWriteThreadSafe(PALLET_RIGHT_FORWARD_TURN_PIN, HIGH);
+            digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, LOW);
+            digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, HIGH);
         }
         else
         {
-            SerialPrintln("MotorRotationChange: Unknown Rotation!");
+            Serial.println("MotorRotationChange: Unknown Rotation!");
         }
     }
     else if(motorType == LEFT_PALLET)
     {
         if (direction == FORWARD)
         {
-            DigitalWriteThreadSafe(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
-            DigitalWriteThreadSafe(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
+            digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
+            digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
         }
         else if(direction == REVERSE)
         {
-            DigitalWriteThreadSafe(PALLET_LEFT_REVERSE_TURN_PIN, LOW);
-            DigitalWriteThreadSafe(PALLET_LEFT_FORWARD_TURN_PIN, HIGH);
+            digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, LOW);
+            digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, HIGH);
         }
         else
         {
-            SerialPrintln("MotorRotationChange: Unknown Rotation!");
+            Serial.println("MotorRotationChange: Unknown Rotation!");
         }
     }
     else if(motorType == BRUSHES)
     {
         if (direction == FORWARD)
         {
-            DigitalWriteThreadSafe(BRUSHES_FORWARD_TURN_PIN, LOW);
-            DigitalWriteThreadSafe(BRUSHES_REVERSE_TURN_PIN, HIGH);
+            digitalWrite(BRUSHES_FORWARD_TURN_PIN, LOW);
+            digitalWrite(BRUSHES_REVERSE_TURN_PIN, HIGH);
         }
         else if(direction == REVERSE)
         {
-            DigitalWriteThreadSafe(BRUSHES_REVERSE_TURN_PIN, LOW);
-            DigitalWriteThreadSafe(BRUSHES_FORWARD_TURN_PIN, HIGH);
+            digitalWrite(BRUSHES_REVERSE_TURN_PIN, LOW);
+            digitalWrite(BRUSHES_FORWARD_TURN_PIN, HIGH);
         }
         else
         {
-            SerialPrintln("MotorRotationChange: Unknown Rotation!");
+            Serial.println("MotorRotationChange: Unknown Rotation!");
         }
     }
     else
     {
-        SerialPrintln("MotorRotationChange: Unknown Motor!");
+        Serial.println("MotorRotationChange: Unknown Motor!");
     }
 }
 
@@ -142,18 +142,18 @@ void MotorSpeedChange(Motor_t motorType, uint8_t speed)
 {
     if (motorType == RIGHT_PALLET)
     {
-        AnalogWriteThreadSafe(PALLET_RIGHT_SPEED_CONTROL_PIN, speed);
+        analogWrite(PALLET_RIGHT_SPEED_CONTROL_PIN, speed);
     }
     else if(motorType == LEFT_PALLET)
     {
-        AnalogWriteThreadSafe(PALLET_LEFT_SPEED_CONTROL_PIN, speed);
+        analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, speed);
     }
     else if(motorType == BRUSHES)
     {
-        AnalogWriteThreadSafe(BRUSHES_SPEED_CONTROL_PIN, speed);
+        analogWrite(BRUSHES_SPEED_CONTROL_PIN, speed);
     }
     else
     {
-        SerialPrintln("MotorSpeedChange: Unknown Motor!");
+        Serial.println("MotorSpeedChange: Unknown Motor!");
     }
 }

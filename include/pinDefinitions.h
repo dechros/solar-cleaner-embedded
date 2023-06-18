@@ -13,7 +13,7 @@
 #define _PIN_DEFINITIONS_H_
 
 /* Fake pin numbers for "EnableInterrupt.h" library */
-#define PJ2_PCINT11_PIN                     (70)
+#define CAN_INTERRUPT_PIN                   (70)
 #define PJ3_PCINT12_PIN                     (71)
 #define PJ4_PCINT13_PIN                     (72)
 #define PJ5_PCINT14_PIN                     (73)
@@ -27,13 +27,13 @@
 
 #define WATER_ON_OFF_PIN                    (5)
 
-#define PALLET_LEFT_SPEED_CONTROL_PIN       (45)
+#define PALLET_LEFT_SPEED_CONTROL_PIN       (46)
 #define PALLET_LEFT_FORWARD_TURN_PIN        (9)
 #define PALLET_LEFT_STOP_PIN                (8)
 #define PALLET_LEFT_REVERSE_TURN_PIN        (7)
 #define PALLET_LEFT_ERROR_PIN               (47)
 
-#define PALLET_RIGHT_SPEED_CONTROL_PIN      (46)
+#define PALLET_RIGHT_SPEED_CONTROL_PIN      (45)
 #define PALLET_RIGHT_FORWARD_TURN_PIN       (6)
 #define PALLET_RIGHT_STOP_PIN               (4)
 #define PALLET_RIGHT_REVERSE_TURN_PIN       (3)

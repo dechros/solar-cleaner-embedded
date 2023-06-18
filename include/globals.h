@@ -13,9 +13,7 @@
 #define _GLOBALS_H_
 
 #include <Arduino.h>
-#include "Arduino_FreeRTOS.h"
 
-extern TaskHandle_t xSerialParserTaskHandle;
-extern TaskHandle_t xSecondTaskHandle;
+extern bool CANMessageReceived;
 
 #endif /* _GLOBALS_H_ */

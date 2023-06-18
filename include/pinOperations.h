@@ -15,7 +15,6 @@
 
 #include <Arduino.h>
 #include "pinDefinitions.h"
-#include "threadSafeSerial.h"
 #include "math.h"
 
 #define PORT_J_FIRST_PIN    14

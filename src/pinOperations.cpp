@@ -10,19 +10,12 @@
  * 
  */
 
+#include "globals.h"
 #include "pinOperations.h"
-//#include "EnableInterrupt.h"
-
-SemaphoreHandle_t xPinMutex;
+#include "EnableInterrupt.h"
 
 void InitializePins()
 {
-    xPinMutex = xSemaphoreCreateMutex();
-    if(xPinMutex == NULL)
-    {
-        SerialPrintln("xPinMutex Create Error!");
-        while (true);
-    }
     pinMode(BRUSHES_SPEED_CONTROL_PIN, OUTPUT);
     pinMode(BRUSHES_FORWARD_TURN_PIN , OUTPUT);
     pinMode(BRUSHES_STOP_PIN         , OUTPUT);
@@ -52,99 +45,61 @@ void InitializePins()
 
     pinModeExtended(PORT_J, PJ2, INPUT);
 
-    //enableInterrupt(PJ2_PCINT11_PIN, MCP2515InterruptCallback, RISING);
-    //enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptACallback, RISING);
-    //enableInterrupt(ENCODER_1_B_PIN, Encoder1InterruptBCallback, RISING);
-    //enableInterrupt(ENCODER_1_0_PIN, Encoder1Interrupt0Callback, RISING);
-    //enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptACallback, RISING);
-    //enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptBCallback, RISING);
-    //enableInterrupt(ENCODER_2_0_PIN, Encoder2Interrupt0Callback, RISING);
+    enableInterrupt(CAN_INTERRUPT_PIN, MCP2515InterruptCallback, CHANGE);
+    enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptACallback, RISING);
+    enableInterrupt(ENCODER_1_B_PIN, Encoder1InterruptBCallback, RISING);
+    enableInterrupt(ENCODER_1_0_PIN, Encoder1Interrupt0Callback, RISING);
+    enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptACallback, RISING);
+    enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptBCallback, RISING);
+    enableInterrupt(ENCODER_2_0_PIN, Encoder2Interrupt0Callback, RISING);
 }
 
 void MCP2515InterruptCallback()
 {
-    /* TODO: Implement Logic */
+    if (digitalReadExtended(CAN_INTERRUPT_PIN) == LOW)
+    {
+        CANMessageReceived = true;
+    }
+    else if(digitalReadExtended(CAN_INTERRUPT_PIN) == HIGH)
+    {
+        CANMessageReceived = false;
+    }
 }
 
 void Encoder1InterruptACallback()
 {
     /* TODO: Implement Logic */
-    SerialPrintln("1ACallBack!");
+    Serial.println("1ACallBack!");
 }
 
 void Encoder1InterruptBCallback()
 {
     /* TODO: Implement Logic */
-    SerialPrintln("1BCallBack!");
+    Serial.println("1BCallBack!");
 }
 
 void Encoder1Interrupt0Callback()
 {
     /* TODO: Implement Logic */
-    SerialPrintln("10CallBack!");
+    Serial.println("10CallBack!");
 }
 
 void Encoder2InterruptACallback()
 {
     /* TODO: Implement Logic */
-    SerialPrintln("2ACallBack!");
+    Serial.println("2ACallBack!");
 }
 
 void Encoder2InterruptBCallback()
 {
     /* TODO: Implement Logic */
-    SerialPrintln("2BCallBack!");
+    Serial.println("2BCallBack!");
 }
 
 void Encoder2Interrupt0Callback()
 {
     /* TODO: Implement Logic */
-    SerialPrintln("20CallBack!");
-}
-
-int DigitalReadThreadSafe(uint8_t pin)
-{
-    int pinValue = 0;
-    xSemaphoreTake(xPinMutex, portMAX_DELAY);
-    if (pin >= 70)
-    {
-        pinValue = digitalReadExtended(pin);
-    }
-    else
-    {
-        pinValue = digitalRead(pin);
-    }
-    xSemaphoreGive(xPinMutex);
-    return pinValue;
-}
-
-void DigitalWriteThreadSafe(uint8_t pin, uint8_t val)
-{
-    xSemaphoreTake(xPinMutex, portMAX_DELAY);
-    if (pin >= 70)
-    {
-        digitalWriteExtended(pin, val);
-    }
-    else
-    {
-        digitalWrite(pin, val);
-    }
-    xSemaphoreGive(xPinMutex);
-}
-
-void AnalogWriteThreadSafe(uint8_t pin, uint8_t val)
-{
-    xSemaphoreTake(xPinMutex, portMAX_DELAY);
-    analogWrite(pin, val);
-    xSemaphoreGive(xPinMutex);
-}
-
-int AnalogReadThreadSafe(uint8_t pin)
-{
-    xSemaphoreTake(xPinMutex, portMAX_DELAY);
-    int value = analogRead(pin);
-    xSemaphoreGive(xPinMutex);
-    return value;
+    Serial.println("20CallBack!");
 }
 
 int digitalReadExtended(uint8_t pin)

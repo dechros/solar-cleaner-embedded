@@ -4,7 +4,6 @@
 #include <EEPROM.h>
 #include <string.h>
 #include "softwareVersion.h"
-#include "threadSafeSerial.h"
 
 #define COMPANY_NAME                            "MOONMACH"
 #define SIZE_OF_COMPANY_NAME                    8
