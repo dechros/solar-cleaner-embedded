@@ -84,11 +84,10 @@ int digitalReadExtended(uint8_t pin);
  * @brief This function is created to set pinMode to a 
  *        non-mapped pin but can be used for all pins.
  * 
- * @param port Port define of the pin like for "PJ2" pin it's "PORT_J".
  * @param pin Defined name of the pin like "PJ2".
  * @param ioMode INPUT, OUTPUT or INPUT_PULLUP.
  */
-void pinModeExtended(uint8_t port, uint8_t pin, uint8_t ioMode);
+void pinModeExtended(uint8_t pin, uint8_t ioMode);
 
 /**
  * @brief This function is used for non-mapped pin's digitalWrite operation.

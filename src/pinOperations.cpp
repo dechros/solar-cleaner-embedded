@@ -43,7 +43,7 @@ void InitializePins()
     pinMode(ENCODER_2_B_PIN, INPUT_PULLUP);
     pinMode(ENCODER_2_0_PIN, INPUT_PULLUP);
 
-    pinModeExtended(PORT_J, PJ2, INPUT);
+    pinModeExtended(PJ2, INPUT);
 
     enableInterrupt(CAN_INTERRUPT_PIN, MCP2515InterruptCallback, CHANGE);
     enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptACallback, RISING);
@@ -148,200 +148,20 @@ void digitalWriteExtended(uint8_t pin, uint8_t val)
     }
 }
 
-void pinModeExtended(uint8_t port, uint8_t pin, uint8_t ioMode)
+void pinModeExtended(uint8_t pin, uint8_t ioMode)
 {
-    switch (port)
+    /* Only used for non-mapped MCP Interrupt pin */
+    if (ioMode == INPUT)
     {
-        case PORT_A:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRA &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRA |= (1 << pin);
-            }
-            else
-            {
-                DDRA &= ~(1 << pin);
-                PORTA |= (1 << pin);
-            }
-            break;
-        }
-        case PORT_B:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRB &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRB |= (1 << pin);
-            }
-            else
-            {
-                DDRB &= ~(1 << pin);
-                PORTB |= (1 << pin);
-            }
-            break;
-        }    
-        case PORT_C:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRC &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRC |= (1 << pin);
-            }
-            else
-            {
-                DDRC &= ~(1 << pin);
-                PORTC |= (1 << pin);
-            }
-            break;
-        }  
-        case PORT_D:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRD &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRD |= (1 << pin);
-            }
-            else
-            {
-                DDRD &= ~(1 << pin);
-                PORTD |= (1 << pin);
-            }
-            break;
-        }  
-        case PORT_E:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRE &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRE |= (1 << pin);
-            }
-            else
-            {
-                DDRE &= ~(1 << pin);
-                PORTE |= (1 << pin);
-            }
-            break;
-        }  
-        case PORT_F:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRF &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRF |= (1 << pin);
-            }
-            else
-            {
-                DDRF &= ~(1 << pin);
-                PORTF |= (1 << pin);
-            }
-            break;
-        }  
-        case PORT_G:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRG &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRG |= (1 << pin);
-            }
-            else
-            {
-                DDRG &= ~(1 << pin);
-                PORTG |= (1 << pin);
-            }
-            break;
-        }  
-        case PORT_H:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRH &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRH |= (1 << pin);
-            }
-            else
-            {
-                DDRH &= ~(1 << pin);
-                PORTH |= (1 << pin);
-            }
-            break;
-        }  
-        case PORT_J:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRJ &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRJ |= (1 << pin);
-            }
-            else
-            {
-                DDRJ &= ~(1 << pin);
-                PORTJ |= (1 << pin);
-            }
-            break;
-        }  
-        case PORT_K:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRK &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRK |= (1 << pin);
-            }
-            else
-            {
-                DDRK &= ~(1 << pin);
-                PORTK |= (1 << pin);
-            }
-            break;
-        }  
-        case PORT_L:
-        {
-            if (ioMode == INPUT)
-            {
-                DDRL &= ~(1 << pin);
-            }
-            else if (ioMode == OUTPUT)
-            {
-                DDRL |= (1 << pin);
-            }
-            else
-            {
-                DDRL &= ~(1 << pin);
-                PORTL |= (1 << pin);
-            }
-            break;
-        }  
-        default:
-        {
-            break;
-        }
+        DDRJ &= ~(1 << pin);
+    }
+    else if (ioMode == OUTPUT)
+    {
+        DDRJ |= (1 << pin);
+    }
+    else
+    {
+        DDRJ &= ~(1 << pin);
+        PORTJ |= (1 << pin);
     }
 }

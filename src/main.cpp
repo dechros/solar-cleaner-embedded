@@ -56,6 +56,27 @@ void loop()
 
 #define SPI_CS_PIN  53
 
+#define FORWARD  		(0)
+#define BACKWARD 		(1)
+
+#define RAMP_UP_SPEED  	(1)
+#define RAMP_DOWN_SPEED (1)
+
+#define REMOTE_CONTROL_MESSAGE_ID_1 	(0x1E4)
+#define REMOTE_CONTROL_MESSAGE_ID_2 	(0x2E4)
+
+typedef struct 
+{
+	uint8_t targetWay;
+	uint8_t targetSpeed;
+	uint8_t currentWay;
+	int16_t currentSpeed;
+}MotorRotationInfo_t;
+
+MotorRotationInfo_t rightPalletMotorInfo;
+MotorRotationInfo_t leftPalletMotorInfo;
+MotorRotationInfo_t brushesMotorInfo;
+
 uint8_t value = 0;
 bool send = false;
 bool increment = true;
@@ -68,133 +89,77 @@ typedef union
 	uint8_t data[8];
 	struct
 	{
-		union
+		struct
 		{
-			uint8_t byte1TotalValue;
-			struct 
-			{
-				uint8_t startFirstSpeed:1;
-				uint8_t bit2:1;
-				uint8_t bit3:1;
-				uint8_t bit4:1;
-				uint8_t bit5:1;
-				uint8_t bit6:1;
-				uint8_t bit7:1;
-				uint8_t bit8:1;
-			}byte1;
-		};
-		union
+			uint8_t startFirstSpeed	  :1;
+			uint8_t startSecondSpeed  :1;
+			uint8_t stopRelaysOpened  :1;
+			uint8_t lowBattery		  :1;
+			uint8_t tiltSwitch		  :1;
+			uint8_t outOfRange		  :1;
+			uint8_t 				  :1;
+			uint8_t stopRelaysClosed  :1;
+		}byte1;
+		struct
 		{
-			uint8_t byte2TotalValue;
-			struct 
-			{
-				uint8_t bit1:1;
-				uint8_t bit2:1;
-				uint8_t bit3:1;
-				uint8_t bit4:1;
-				uint8_t bit5:1;
-				uint8_t bit6:1;
-				uint8_t bit7:1;
-				uint8_t bit8:1;
-			}byte2;
-		};
-		union
+			uint8_t paddleANorth		:1;
+			uint8_t paddleASouth		:1;
+			uint8_t paddleBNorth		:1;
+			uint8_t paddleBSouth		:1;
+			uint8_t potantiometerActive :1;
+			uint8_t 					:1;
+			uint8_t paddleDNorth		:1;
+			uint8_t paddleDSouth		:1;
+		}byte2;
+		struct
 		{
-			uint8_t byte3TotalValue;
-			struct 
-			{
-				uint8_t bit1:1;
-				uint8_t bit2:1;
-				uint8_t bit3:1;
-				uint8_t bit4:1;
-				uint8_t bit5:1;
-				uint8_t bit6:1;
-				uint8_t bit7:1;
-				uint8_t bit8:1;
-			}byte3;
-		};
-		union
+			uint8_t bit1:1;
+			uint8_t bit2:1;
+			uint8_t bit3:1;
+			uint8_t bit4:1;
+			uint8_t bit5:1;
+			uint8_t bit6:1;
+			uint8_t bit7:1;
+			uint8_t bit8:1;
+		}byte3;
+		struct
 		{
-			uint8_t byte4TotalValue;
-			struct 
-			{
-				uint8_t bit1:1;
-				uint8_t bit2:1;
-				uint8_t bit3:1;
-				uint8_t bit4:1;
-				uint8_t bit5:1;
-				uint8_t bit6:1;
-				uint8_t bit7:1;
-				uint8_t bit8:1;
-			}byte4;
-		};
-		union
+			uint8_t bit1	:1;
+			uint8_t bit2	:1;
+			uint8_t 		:6;
+		}byte4;
+		struct
 		{
-			uint8_t byte5TotalValue;
-			struct 
-			{
-				uint8_t bit1:1;
-				uint8_t bit2:1;
-				uint8_t bit3:1;
-				uint8_t bit4:1;
-				uint8_t bit5:1;
-				uint8_t bit6:1;
-				uint8_t bit7:1;
-				uint8_t bit8:1;
-			}byte5;
-		};
-		union
+			uint8_t paddleAValue;
+		}byte5;
+		struct 
 		{
-			uint8_t byte6TotalValue;
-			struct 
-			{
-				uint8_t bit1:1;
-				uint8_t bit2:1;
-				uint8_t bit3:1;
-				uint8_t bit4:1;
-				uint8_t bit5:1;
-				uint8_t bit6:1;
-				uint8_t bit7:1;
-				uint8_t bit8:1;
-			}byte6;
-		};
-		union
+			uint8_t paddleBValue;
+		}byte6;
+		struct 
 		{
-			uint8_t byte7TotalValue;
-			struct 
-			{
-				uint8_t bit1:1;
-				uint8_t bit2:1;
-				uint8_t bit3:1;
-				uint8_t bit4:1;
-				uint8_t bit5:1;
-				uint8_t bit6:1;
-				uint8_t bit7:1;
-				uint8_t bit8:1;
-			}byte7;
-		};
-		union
+			uint8_t potantiometerValue;
+		}byte7;
+		struct 
 		{
-			uint8_t byte8TotalValue;
-			struct 
-			{
-				uint8_t bit1:1;
-				uint8_t bit2:1;
-				uint8_t bit3:1;
-				uint8_t bit4:1;
-				uint8_t bit5:1;
-				uint8_t bit6:1;
-				uint8_t bit7:1;
-				uint8_t bit8:1;
-			}byte8;
-		};
+			uint8_t paddleDValue;
+		}byte8;
 	};
 }Message_t;
+Message_t canmsg;
 
 void setup()
 {
+	/*
+	InitializePins();
+	InitializeMotors();
+	InitializeEEPROM();
+	WaterPumpOff();
+	SerialBegin(9600);
+	*/
 	InitializePins();
 	Serial.begin(115200);
+	memset(&canmsg, 0, sizeof(Message_t));
 	while (CAN_OK != CAN.begin(MCP_ANY, CAN_250KBPS, MCP_16MHZ))
 	{
 		delay(100);
@@ -210,6 +175,7 @@ void setup()
 	digitalWrite(BRUSHES_FORWARD_TURN_PIN, HIGH);
 	analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, 0);
 
+	/* 50ms timer interrupt for motor speed control */
 	cli();
 	TCCR1A = 0;
 	TCCR1B = 0;
@@ -219,101 +185,101 @@ void setup()
 	TCCR1B |= (0 << CS12) | (1 << CS11) | (1 << CS10);  
 	TIMSK1 |= (1 << OCIE1A);
 	sei();
-
-	/*
-	InitializePins();
-	InitializeMotors();
-	InitializeEEPROM();
-	WaterPumpOff();
-	SerialBegin(9600);
-	*/
 }
-#define FORWARD  		(0)
-#define BACKWARD 		(1)
 
-#define RAMP_UP_SPEED  	(1)
-#define RAMP_DOWN_SPEED (1)
+uint8_t cycleCounter = 0;
 
-#define REMOTE_CONTROL_MESSAGE_ID_1 	(0x1E4)
-#define REMOTE_CONTROL_MESSAGE_ID_2 	(0x2E4)
-
-uint8_t targetWay = FORWARD;
-uint8_t targetSpeed = 0;
-uint8_t currentWay = FORWARD;
-int16_t currentSpeed = 0;
 void loop()
 {
-	if (CANMessageReceived)
+	if (!CRC32ErrorFlag)
 	{
-		byte readArray[8] = {0};
-		uint8_t messageLength = 0;
-		uint32_t canMessageId = 0;
-		if (CAN.readMsgBuf(&canMessageId, &messageLength, readArray) == CAN_OK)
+		if (CANMessageReceived)
 		{
-			if (canMessageId == 0x7FF)
+			uint8_t messageLength = 0;
+			uint32_t canMessageId = 0;
+			if (CAN.readMsgBuf(&canMessageId, &messageLength, canmsg.data) == CAN_OK)
 			{
-				targetSpeed = readArray[0] / 3;
-				targetWay = readArray[1];
+				if (canMessageId == 0x7FF)
+				{
+					rightPalletMotorInfo.targetSpeed = canmsg.data[0] / 3;
+					rightPalletMotorInfo.targetWay = canmsg.data[1];
+				}
+				else if (canMessageId == REMOTE_CONTROL_MESSAGE_ID_1)
+				{
+					Serial.println("Message 1 Came!");
+				}
+				else if (canMessageId == REMOTE_CONTROL_MESSAGE_ID_2)
+				{
+					Serial.println("Message 2 Came!");
+				}
 			}
-			else if (canMessageId == REMOTE_CONTROL_MESSAGE_ID_1)
+		}
+
+		if (send == true)
+		{
+			if (CRC32ErrorFlag)
 			{
-				/* code */
+				Serial.println("Status: ERROR!");
+				delay(1000);
 			}
 			
+			cycleCounter++;
+			if (cycleCounter == 20)
+			{
+				cycleCounter = 0;
+				SetCRC32();
+			}
+			
+			//CAN.sendMsgBuf(0x201, 8, array);
+			if (rightPalletMotorInfo.targetWay == rightPalletMotorInfo.currentWay)
+			{
+				if (rightPalletMotorInfo.targetSpeed > rightPalletMotorInfo.currentSpeed)
+				{
+					rightPalletMotorInfo.currentSpeed = rightPalletMotorInfo.currentSpeed + RAMP_UP_SPEED;
+					if (rightPalletMotorInfo.currentSpeed > rightPalletMotorInfo.targetSpeed)
+					{
+						rightPalletMotorInfo.currentSpeed = rightPalletMotorInfo.targetSpeed;
+					}
+					analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, (uint8_t)rightPalletMotorInfo.currentSpeed);
+				}
+				else if (rightPalletMotorInfo.targetSpeed < rightPalletMotorInfo.currentSpeed)
+				{
+					rightPalletMotorInfo.currentSpeed = rightPalletMotorInfo.currentSpeed - RAMP_DOWN_SPEED;
+					if (rightPalletMotorInfo.currentSpeed < rightPalletMotorInfo.targetSpeed)
+					{
+						rightPalletMotorInfo.currentSpeed = rightPalletMotorInfo.targetSpeed;
+					}
+					analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, (uint8_t)rightPalletMotorInfo.currentSpeed);
+				}
+			}
+			else
+			{
+				rightPalletMotorInfo.currentSpeed = rightPalletMotorInfo.currentSpeed - RAMP_DOWN_SPEED;
+				if (rightPalletMotorInfo.currentSpeed < 0)
+				{
+					rightPalletMotorInfo.currentSpeed = 0;
+				}
+				analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, (uint8_t)rightPalletMotorInfo.currentSpeed);
+				if (rightPalletMotorInfo.currentSpeed == 0)
+				{
+					if (rightPalletMotorInfo.targetWay == FORWARD)
+					{
+						digitalWrite(BRUSHES_FORWARD_TURN_PIN, HIGH);
+						digitalWrite(BRUSHES_SPEED_CONTROL_PIN, LOW);
+					}
+					else
+					{
+						digitalWrite(BRUSHES_FORWARD_TURN_PIN, LOW);
+						digitalWrite(BRUSHES_SPEED_CONTROL_PIN, HIGH);
+					}
+					rightPalletMotorInfo.currentWay = rightPalletMotorInfo.targetWay;
+				}
+			}
+			send = false;
 		}
-	}
-
-	if (send == true)
-	{
-		//CAN.sendMsgBuf(0x201, 8, array);
-		if (targetWay == currentWay)
-		{
-			if (targetSpeed > currentSpeed)
-			{
-				currentSpeed = currentSpeed + RAMP_UP_SPEED;
-				if (currentSpeed > targetSpeed)
-				{
-					currentSpeed = targetSpeed;
-				}
-				analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, (uint8_t)currentSpeed);
-			}
-			else if (targetSpeed < currentSpeed)
-			{
-				currentSpeed = currentSpeed - RAMP_DOWN_SPEED;
-				if (currentSpeed < targetSpeed)
-				{
-					currentSpeed = targetSpeed;
-				}
-				analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, (uint8_t)currentSpeed);
-			}
-		}
-		else
-		{
-			currentSpeed = currentSpeed - RAMP_DOWN_SPEED;
-			if (currentSpeed < 0)
-			{
-				currentSpeed = 0;
-			}
-			analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, (uint8_t)currentSpeed);
-			if (currentSpeed == 0)
-			{
-				if (targetWay == FORWARD)
-				{
-					digitalWrite(BRUSHES_FORWARD_TURN_PIN, HIGH);
-					digitalWrite(BRUSHES_SPEED_CONTROL_PIN, LOW);
-				}
-				else
-				{
-					digitalWrite(BRUSHES_FORWARD_TURN_PIN, LOW);
-					digitalWrite(BRUSHES_SPEED_CONTROL_PIN, HIGH);
-				}
-				currentWay = targetWay;
-			}
-		}
-		send = false;
 	}
 	
-	/*
+#if 0
 	int size = Serial.available();
 	if (size > 0)
 	{
@@ -356,7 +322,7 @@ void loop()
 			digitalWrite(BRUSHES_SPEED_CONTROL_PIN, LOW);
 		}
 	}
-	*/
+#endif
 }
 
 ISR(TIMER1_COMPA_vect)

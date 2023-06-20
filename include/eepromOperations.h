@@ -4,6 +4,9 @@
 #include <EEPROM.h>
 #include <string.h>
 #include "softwareVersion.h"
+#include "pinOperations.h"
+
+#define CRC32_VALUE                             3000000
 
 #define COMPANY_NAME                            "MOONMACH"
 #define SIZE_OF_COMPANY_NAME                    8
@@ -19,8 +22,11 @@
 #define EEPROM_YEAR_ADDRESS                     EEPROM_MONTH_ADDRESS + 1
 #define EEPROM_ERROR_COUNT_ADDRESS              EEPROM_YEAR_ADDRESS + 1
 #define EEPROM_CRC16_ADDRESS                    EEPROM_ERROR_COUNT_ADDRESS + 2
+#define EEPROM_CRC32_ADDRESS                    EEPROM_CRC16_ADDRESS + 2
 
 #define EEPROM_ERROR_SECTOR_START_ADDRESS       (sizeof(EepromHeader_t))
+
+extern bool CRC32ErrorFlag;
 
 typedef struct 
 {
@@ -47,13 +53,14 @@ typedef struct
     uint8_t year;
 }Date_t;
 
-typedef struct
+typedef struct __attribute__ ((packed, aligned(1)))
 {
     CompanyName_t companyName;
     Version_t version;
     Date_t date;
     uint16_t errorCount;
     uint16_t CRC16;
+    uint32_t CRC32;
 }EepromHeader_t;
 
 /**
@@ -61,6 +68,12 @@ typedef struct
  * 
  */
 void InitializeEEPROM(void);
+
+/**
+ * @brief 
+ * 
+ */
+void ClearEEPROM(void);
 
 /**
  * @brief 
@@ -109,5 +122,18 @@ uint16_t GetErrorCount(void);
  * @return Error_t 
  */
 Error_t GetError(uint16_t errorNo);
+
+/**
+ * @brief Set the CRC32 value
+ *
+ */
+void SetCRC32(void);
+
+/**
+ * @brief Get the CRC32 value
+ *
+ * @return uint32_t 
+ */
+uint32_t GetCRC32(void);
 
 #endif /* _EEPROM_OPERATIONS_H_ */

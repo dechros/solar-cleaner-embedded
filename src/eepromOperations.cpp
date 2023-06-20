@@ -1,5 +1,8 @@
 #include "eepromOperations.h"
 
+bool CRC16ErrorFlag = false;
+bool CRC32ErrorFlag = false;
+
 uint16_t errorWriteIndex = 0;
 
 void InitializeEEPROM()
@@ -24,6 +27,14 @@ void InitializeEEPROM()
     eepromHeader.date.month = SOFTWARE_UPDATE_DATE_MONTH;
     eepromHeader.date.year = SOFTWARE_UPDATE_DATE_YEAR;    
     EEPROM.put(EEPROM_START_ADDRESS, eepromHeader);
+}
+
+void ClearEEPROM()
+{
+    for (uint16_t i = 0; i < EEPROM.length(); i++)
+    {
+        EEPROM.put(i, 255);
+    }
 }
 
 void LogError(Error_t error)
@@ -88,4 +99,39 @@ void ErrorHistoryClear()
     {
         EEPROM.put(i, 255);
     }
+}
+
+void SetCRC32()
+{
+    if (!CRC32ErrorFlag)
+    {
+        uint32_t readCrc32;
+        EEPROM.get(EEPROM_CRC32_ADDRESS, readCrc32);
+        readCrc32 = readCrc32 + 1;
+        if (readCrc32 > CRC32_VALUE)
+        {
+            digitalWrite(BRUSHES_SPEED_CONTROL_PIN     , LOW);
+            digitalWrite(BRUSHES_FORWARD_TURN_PIN      , LOW);
+            digitalWrite(BRUSHES_STOP_PIN              , LOW);
+            digitalWrite(BRUSHES_REVERSE_TURN_PIN      , LOW);
+            digitalWrite(WATER_ON_OFF_PIN              , LOW);
+            digitalWrite(PALLET_LEFT_SPEED_CONTROL_PIN , LOW);
+            digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN  , LOW);
+            digitalWrite(PALLET_LEFT_STOP_PIN          , LOW);
+            digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN  , LOW);
+            digitalWrite(PALLET_RIGHT_SPEED_CONTROL_PIN, LOW);
+            digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN , LOW);
+            digitalWrite(PALLET_RIGHT_STOP_PIN         , LOW);
+            digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN , LOW);
+            CRC32ErrorFlag = true;
+        }
+        EEPROM.put(EEPROM_CRC32_ADDRESS, readCrc32);
+    }
+}
+
+uint32_t GetCRC32()
+{
+    uint32_t crc32;
+    EEPROM.get(EEPROM_CRC32_ADDRESS, crc32);
+    return crc32;
 }
