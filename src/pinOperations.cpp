@@ -52,6 +52,24 @@ void InitializePins()
     enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptACallback, RISING);
     enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptBCallback, RISING);
     enableInterrupt(ENCODER_2_0_PIN, Encoder2Interrupt0Callback, RISING);
+
+    analogWrite(PALLET_RIGHT_SPEED_CONTROL_PIN, 0);
+    analogWrite(BRUSHES_SPEED_CONTROL_PIN, 0);
+    analogWrite(PALLET_LEFT_SPEED_CONTROL_PIN, 0);
+
+	digitalWrite(BRUSHES_FORWARD_TURN_PIN, HIGH);
+	digitalWrite(BRUSHES_STOP_PIN, LOW);
+    digitalWrite(BRUSHES_REVERSE_TURN_PIN, LOW);
+
+    digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
+	digitalWrite(PALLET_LEFT_STOP_PIN, LOW);
+    digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
+
+    digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, HIGH);
+	digitalWrite(PALLET_RIGHT_STOP_PIN, LOW);
+    digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, LOW);
+
+    digitalWrite(WATER_ON_OFF_PIN, LOW);
 }
 
 void MCP2515InterruptCallback()

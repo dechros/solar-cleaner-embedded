@@ -19,58 +19,11 @@
 
 #define PORT_J_FIRST_PIN    14
 
-enum
-{
-    PORT_A,
-    PORT_B,
-    PORT_C,
-    PORT_D,
-    PORT_E,
-    PORT_F,
-    PORT_G,
-    PORT_H,
-    PORT_J,
-    PORT_K,
-    PORT_L,
-};
-
 /**
  * @brief This function initializes pins IO modes and enables interrupts.
  * 
  */
 void InitializePins(void);
-
-/**
- * @brief Thread safe digitalRead() with extended pins
- * 
- * @param pin pin number
- * @return int value
- */
-int DigitalReadThreadSafe(uint8_t pin);
-
-/**
- * @brief Thread safe digitalWrite() with extended pins
- * 
- * @param pin pin number
- * @return int value
- */
-void DigitalWriteThreadSafe(uint8_t pin, uint8_t val);
-
-/**
- * @brief Thread safe analogWrite() with extended pins
- * 
- * @param pin pin number
- * @param val value
- */
-void AnalogWriteThreadSafe(uint8_t pin, uint8_t val);
-
-/**
- * @brief Thread safe analogRead()
- * 
- * @param pin pin number
- * @return int value
- */
-int AnalogReadThreadSafe(uint8_t pin);
 
 /**
  * @brief This function is used for non-mapped pin's digitalRead operation.
