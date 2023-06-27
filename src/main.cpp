@@ -64,7 +64,7 @@ void loop()
 
 /* TODO: SAG SOL PALET ICIN IKIYE BOL */
 #define RPM_MAX_SPEED   		(5)
-#define JOYSTICK_DEAD_ZONE 		(10)
+#define JOYSTICK_DEAD_ZONE 		(5)
 #define MIN_MOTOR_SPEED			(10)
 #define MAX_MOTOR_SPEED			(85)
 /**************************************/
@@ -90,11 +90,12 @@ MotorRotationInfo_t leftPalletMotorInfo;
 MotorRotationInfo_t brushesMotorInfo;
 
 uint8_t value = 0;
-uint8_t cycleCounter = 0;
+uint32_t cycleCounter = 0;
 bool send = false;
 bool increment = true;
 uint8_t increValue = 0;
-bool remoteComStarted = false;
+uint32_t previousCanIncrementCounter = 0;
+uint32_t canIncrementCounter = 0;
 uint8_t array[8] = {0x10,0x11,0x12,0x13,0x20,0x21,0x22,0x23};
 
 MCP_CAN CAN(SPI_CS_PIN); 
@@ -176,6 +177,21 @@ void setup()
 	}
 	CAN.setMode(MCP_NORMAL);
 
+	rightPalletMotorInfo.currentSpeed = 0;
+	rightPalletMotorInfo.currentWay = REVERSE;
+	rightPalletMotorInfo.targetWay = REVERSE;
+	rightPalletMotorInfo.targetSpeed = 0;
+
+	leftPalletMotorInfo.currentSpeed = 0;
+	leftPalletMotorInfo.currentWay = FORWARD;
+	leftPalletMotorInfo.targetWay = FORWARD;
+	leftPalletMotorInfo.targetSpeed = 0;
+
+	brushesMotorInfo.currentSpeed = 0;
+	brushesMotorInfo.currentWay = FORWARD;
+	brushesMotorInfo.targetWay = FORWARD;
+	brushesMotorInfo.targetSpeed = 0;
+
 	/* 50ms timer interrupt for motor speed control */
 	cli();
 	TCCR1A = 0;
@@ -194,6 +210,7 @@ void loop()
 	{
 		if (CANMessageReceived)
 		{
+			canIncrementCounter++;
 			uint8_t messageLength = 0;
 			uint32_t canMessageId = 0;
 
@@ -201,34 +218,39 @@ void loop()
 			{
 				if (canMessageId == REMOTE_CONTROL_MESSAGE_ID_1)
 				{
-					remoteComStarted = true;
 					static uint8_t previousRampUpValue = 0;
 					static uint8_t previousRampDownValue = 0;
 					if (canmsg.byte4.bit1 == 1 && previousRampUpValue == 0)
 					{
-						Serial.println("RPM_SPEED: " + (char)(RPM_SPEED + 48));
 						RPM_SPEED++;
 						if (RPM_SPEED > 5)
 						{
 							RPM_SPEED = 5;
 						}
+						Serial.println(RPM_SPEED);
 					}
 					else if (canmsg.byte4.bit2 == 1 && previousRampDownValue == 0)
 					{
-						Serial.println("RPM_SPEED: " + (char)(RPM_SPEED + 48));
 						RPM_SPEED--;
 						if (RPM_SPEED < 1)
 						{
 							RPM_SPEED = 1;
 						}
+						Serial.println(RPM_SPEED);
 					}
 					previousRampUpValue = canmsg.byte4.bit1;
 					previousRampDownValue = canmsg.byte4.bit2;
 					
-					if (rightPalletMotorInfo.targetSpeed > JOYSTICK_DEAD_ZONE)
+					if (canmsg.byte8.paddleDValue > JOYSTICK_DEAD_ZONE)
 					{
-						rightPalletMotorInfo.targetSpeed = (canmsg.byte8.paddleDValue / 3) * (RPM_SPEED / RPM_MAX_SPEED);
+						rightPalletMotorInfo.targetSpeed = (canmsg.byte8.paddleDValue / 3) * ((double)RPM_SPEED / RPM_MAX_SPEED);
+						Serial.println(rightPalletMotorInfo.targetSpeed);
 					}
+					else
+					{
+						rightPalletMotorInfo.targetSpeed = 0;
+					}
+					
 					if (canmsg.byte2.paddleDNorth == 1 && canmsg.byte2.paddleDSouth == 0)
 					{
 						rightPalletMotorInfo.targetWay = FORWARD;
@@ -238,10 +260,15 @@ void loop()
 						rightPalletMotorInfo.targetWay = BACKWARD;
 					}
 
-					if (leftPalletMotorInfo.targetSpeed > JOYSTICK_DEAD_ZONE)
+					if (canmsg.byte5.paddleAValue > JOYSTICK_DEAD_ZONE)
 					{
-						leftPalletMotorInfo.targetSpeed = (canmsg.byte5.paddleAValue / 3) * (RPM_SPEED / RPM_MAX_SPEED);
+						leftPalletMotorInfo.targetSpeed = (canmsg.byte5.paddleAValue / 3) * ((double)RPM_SPEED / RPM_MAX_SPEED);
 					}
+					else
+					{
+						leftPalletMotorInfo.targetSpeed = 0;
+					}
+					
 					if (canmsg.byte2.paddleANorth == 1 && canmsg.byte2.paddleASouth == 0)
 					{
 						leftPalletMotorInfo.targetWay = FORWARD;
@@ -251,10 +278,15 @@ void loop()
 						leftPalletMotorInfo.targetWay = BACKWARD;
 					}
 
-					if (brushesMotorInfo.targetSpeed > JOYSTICK_DEAD_ZONE)
+					if (canmsg.byte7.potantiometerValue > JOYSTICK_DEAD_ZONE)
 					{
 						brushesMotorInfo.targetSpeed = canmsg.byte7.potantiometerValue;
 					}
+					else
+					{
+						brushesMotorInfo.targetSpeed = 0;
+					}
+					
 					if (canmsg.byte3.bit6 == 0 && canmsg.byte3.bit5 == 1)
 					{
 						brushesMotorInfo.targetWay = FORWARD;
@@ -264,14 +296,14 @@ void loop()
 						brushesMotorInfo.targetWay = BACKWARD;
 					}
 
-					if (canmsg.byte3.bit3 == 1)
+					if (canmsg.byte3.bit7 == 1)
 					{
-						Serial.println("Water ON");
+						//Serial.println("Bit 7 on");
 						WaterPumpOn();
 					}
-					else if (canmsg.byte3.bit3 == 0)
+					else if (canmsg.byte3.bit7 == 0)
 					{
-						Serial.println("Water OFF");
+						//Serial.println("Bit 7 off");
 						WaterPumpOff();
 					}
 				}
@@ -288,14 +320,15 @@ void loop()
 			}*/
 			
 			cycleCounter++;
+			if (/* condition */)
+			{
+				/* code */
+			}
+			
 			if (cycleCounter == 20)
 			{	
-				cycleCounter = 0;
-				if (remoteComStarted == false)
-				{
-					uint8_t startRemote = 1;
-					CAN.sendMsgBuf(0x0, 1, &startRemote);
-				}
+				uint8_t startRemote = 1;
+				CAN.sendMsgBuf(0x0, 1, &startRemote);
 				//SetCRC32();
 			}
 			
@@ -335,17 +368,18 @@ void loop()
 				{
 					if (rightPalletMotorInfo.targetWay == FORWARD)
 					{
-						digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, HIGH);
-						digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, LOW);
+						digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, LOW);
+						digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, HIGH);
 					}
 					else
 					{
-						digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, LOW);
-						digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, HIGH);
+						digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, HIGH);
+						digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, LOW);
 					}
 					rightPalletMotorInfo.currentWay = rightPalletMotorInfo.targetWay;
 				}
 			}
+			
 			/*LEFT*/
 			if (leftPalletMotorInfo.targetWay == leftPalletMotorInfo.currentWay)
 			{
@@ -380,17 +414,18 @@ void loop()
 				{
 					if (leftPalletMotorInfo.targetWay == FORWARD)
 					{
-						digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
-						digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
+						digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, LOW);
+						digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, HIGH);
 					}
 					else
 					{
-						digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, LOW);
-						digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, HIGH);
+						digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
+						digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
 					}
 					leftPalletMotorInfo.currentWay = leftPalletMotorInfo.targetWay;
 				}
 			}
+			
 			/*BRUSH*/
 			if (brushesMotorInfo.targetWay == brushesMotorInfo.currentWay)
 			{
@@ -425,13 +460,13 @@ void loop()
 				{
 					if (brushesMotorInfo.targetWay == FORWARD)
 					{
-						digitalWrite(BRUSHES_REVERSE_TURN_PIN, HIGH);
-						digitalWrite(BRUSHES_FORWARD_TURN_PIN, LOW);
+						digitalWrite(BRUSHES_REVERSE_TURN_PIN, LOW);
+						digitalWrite(BRUSHES_FORWARD_TURN_PIN, HIGH);
 					}
 					else
 					{
-						digitalWrite(BRUSHES_REVERSE_TURN_PIN, LOW);
-						digitalWrite(BRUSHES_FORWARD_TURN_PIN, HIGH);
+						digitalWrite(BRUSHES_REVERSE_TURN_PIN, HIGH);
+						digitalWrite(BRUSHES_FORWARD_TURN_PIN, LOW);
 					}
 					brushesMotorInfo.currentWay = brushesMotorInfo.targetWay;
 				}

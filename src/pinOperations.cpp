@@ -61,13 +61,13 @@ void InitializePins()
 	digitalWrite(BRUSHES_STOP_PIN, LOW);
     digitalWrite(BRUSHES_REVERSE_TURN_PIN, LOW);
 
-    digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, LOW);
+    digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN, HIGH);
 	digitalWrite(PALLET_LEFT_STOP_PIN, LOW);
-    digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, HIGH);
+    digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN, LOW);
 
-    digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, HIGH);
+    digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN, LOW);
 	digitalWrite(PALLET_RIGHT_STOP_PIN, LOW);
-    digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, LOW);
+    digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN, HIGH);
 
     digitalWrite(WATER_ON_OFF_PIN, LOW);
 }
