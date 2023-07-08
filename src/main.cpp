@@ -320,13 +320,10 @@ void loop()
 			}*/
 			
 			cycleCounter++;
-			if (/* condition */)
-			{
-				/* code */
-			}
 			
 			if (cycleCounter == 20)
 			{	
+				cycleCounter = 0;
 				uint8_t startRemote = 1;
 				CAN.sendMsgBuf(0x0, 1, &startRemote);
 				//SetCRC32();
