@@ -1,3 +1,5 @@
 #include "globals.h"
 
-bool CANMessageReceived = false;
+Motor LeftPalletMotor(LEFT_PALLET);
+Motor RightPalletMotor(RIGHT_PALLET);
+Motor BrushesMotor(BRUSHES);

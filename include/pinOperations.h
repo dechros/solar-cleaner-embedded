@@ -19,11 +19,13 @@
 
 #define PORT_J_FIRST_PIN    14
 
+extern bool CANMessageReceived;
+
 /**
  * @brief This function initializes pins IO modes and enables interrupts.
  * 
  */
-void InitializePins(void);
+void InitPins(void);
 
 /**
  * @brief This function is used for non-mapped pin's digitalRead operation.

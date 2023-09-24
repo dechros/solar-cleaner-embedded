@@ -12,8 +12,12 @@
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
-#include <Arduino.h>
+#include "motor.h"
 
-extern bool CANMessageReceived;
+#define CAN_MODE 0
+
+extern Motor LeftPalletMotor;
+extern Motor RightPalletMotor;
+extern Motor BrushesMotor;
 
 #endif /* _GLOBALS_H_ */
