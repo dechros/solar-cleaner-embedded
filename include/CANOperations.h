@@ -5,7 +5,7 @@
 #include "motor.h"
 
 #define SPI_CS_PIN  53
-
+#define JOYSTICK_DEAD_ZONE_CAN_REMOTE	(5)
 #define REMOTE_CONTROL_MESSAGE_ID_1 	(0x1E4)
 #define REMOTE_CONTROL_MESSAGE_ID_2 	(0x2E4)
 

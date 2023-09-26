@@ -19,8 +19,8 @@ void setup()
 {
 	Serial.begin(115200);
 	InitPins();
-	LeftPalletMotor.Init();
-	RightPalletMotor.Init();
+	LeftTrackMotor.Init();
+	RightTrackMotor.Init();
 	BrushesMotor.Init();
 #if CAN_MODE
 	InitCANBus();
@@ -31,6 +31,7 @@ void setup()
 
 void loop()
 {
+
 #if CAN_MODE
 	CheckCANMessage();
 	if (sendRemoteStartMessage == true)
@@ -40,12 +41,18 @@ void loop()
 	}
 #else
 	CheckTCPMessage();
+	if (checkMessageTimeoutFlag == true)
+	{
+		CheckMessageTimeout();
+		checkMessageTimeoutFlag = false;
+	}
 #endif
 	if (updateMotorsParameters == true)
 	{
-		LeftPalletMotor.RunAlgorithm();
-		RightPalletMotor.RunAlgorithm();
+		LeftTrackMotor.RunAlgorithm();
+		RightTrackMotor.RunAlgorithm();
 		BrushesMotor.RunAlgorithm();
 		updateMotorsParameters = false;
 	}
+
 }

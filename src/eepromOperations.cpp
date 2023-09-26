@@ -115,14 +115,14 @@ void SetCRC32()
             digitalWrite(BRUSHES_STOP_PIN              , LOW);
             digitalWrite(BRUSHES_REVERSE_TURN_PIN      , LOW);
             digitalWrite(WATER_ON_OFF_PIN              , LOW);
-            digitalWrite(PALLET_LEFT_SPEED_CONTROL_PIN , LOW);
-            digitalWrite(PALLET_LEFT_FORWARD_TURN_PIN  , LOW);
-            digitalWrite(PALLET_LEFT_STOP_PIN          , LOW);
-            digitalWrite(PALLET_LEFT_REVERSE_TURN_PIN  , LOW);
-            digitalWrite(PALLET_RIGHT_SPEED_CONTROL_PIN, LOW);
-            digitalWrite(PALLET_RIGHT_FORWARD_TURN_PIN , LOW);
-            digitalWrite(PALLET_RIGHT_STOP_PIN         , LOW);
-            digitalWrite(PALLET_RIGHT_REVERSE_TURN_PIN , LOW);
+            digitalWrite(TRACK_LEFT_SPEED_CONTROL_PIN , LOW);
+            digitalWrite(TRACK_LEFT_FORWARD_TURN_PIN  , LOW);
+            digitalWrite(TRACK_LEFT_STOP_PIN          , LOW);
+            digitalWrite(TRACK_LEFT_REVERSE_TURN_PIN  , LOW);
+            digitalWrite(TRACK_RIGHT_SPEED_CONTROL_PIN, LOW);
+            digitalWrite(TRACK_RIGHT_FORWARD_TURN_PIN , LOW);
+            digitalWrite(TRACK_RIGHT_STOP_PIN         , LOW);
+            digitalWrite(TRACK_RIGHT_REVERSE_TURN_PIN , LOW);
             CRC32ErrorFlag = true;
         }
         EEPROM.put(EEPROM_CRC32_ADDRESS, readCrc32);

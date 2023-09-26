@@ -61,43 +61,43 @@ void CheckCANMessage()
 				previousRampUpValue = CANMessage.byte4.bit1;
 				previousRampDownValue = CANMessage.byte4.bit2;
 				
-				if (CANMessage.byte8.paddleDValue > JOYSTICK_DEAD_ZONE)
+				if (CANMessage.byte8.paddleDValue > JOYSTICK_DEAD_ZONE_CAN_REMOTE)
 				{
-					RightPalletMotor.SetTargetSpeed((uint8_t)((CANMessage.byte8.paddleDValue / 3) * ((double)RPM_SPEED / RPM_MAX_SPEED)));
+					RightTrackMotor.SetTargetSpeed((uint8_t)((CANMessage.byte8.paddleDValue / 3) * ((double)RPM_SPEED / RPM_MAX_SPEED)));
 				}
 				else
 				{
-					RightPalletMotor.SetTargetSpeed(0);
+					RightTrackMotor.SetTargetSpeed(0);
 				}
 				
 				if (CANMessage.byte2.paddleDNorth == 1 && CANMessage.byte2.paddleDSouth == 0)
 				{
-					RightPalletMotor.SetTargetDirection(REVERSE);
+					RightTrackMotor.SetTargetDirection(REVERSE);
 				}
 				else if (CANMessage.byte2.paddleDNorth == 0 && CANMessage.byte2.paddleDSouth == 1)
 				{
-					RightPalletMotor.SetTargetDirection(FORWARD);
+					RightTrackMotor.SetTargetDirection(FORWARD);
 				}
 
-				if (CANMessage.byte5.paddleAValue > JOYSTICK_DEAD_ZONE)
+				if (CANMessage.byte5.paddleAValue > JOYSTICK_DEAD_ZONE_CAN_REMOTE)
 				{
-					LeftPalletMotor.SetTargetSpeed((uint8_t)((CANMessage.byte5.paddleAValue / 3) * ((double)RPM_SPEED / RPM_MAX_SPEED)));
+					LeftTrackMotor.SetTargetSpeed((uint8_t)((CANMessage.byte5.paddleAValue / 3) * ((double)RPM_SPEED / RPM_MAX_SPEED)));
 				}
 				else
 				{
-					LeftPalletMotor.SetTargetSpeed(0);
+					LeftTrackMotor.SetTargetSpeed(0);
 				}
 				
 				if (CANMessage.byte2.paddleANorth == 1 && CANMessage.byte2.paddleASouth == 0)
 				{
-					LeftPalletMotor.SetTargetDirection(FORWARD);
+					LeftTrackMotor.SetTargetDirection(FORWARD);
 				}
 				else if (CANMessage.byte2.paddleANorth == 0 && CANMessage.byte2.paddleASouth == 1)
 				{
-					LeftPalletMotor.SetTargetDirection(REVERSE);
+					LeftTrackMotor.SetTargetDirection(REVERSE);
 				}
 
-				if (CANMessage.byte7.potantiometerValue > JOYSTICK_DEAD_ZONE)
+				if (CANMessage.byte7.potantiometerValue > JOYSTICK_DEAD_ZONE_CAN_REMOTE)
 				{
 					BrushesMotor.SetTargetSpeed(CANMessage.byte7.potantiometerValue);
 				}

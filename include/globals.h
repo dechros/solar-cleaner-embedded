@@ -16,8 +16,8 @@
 
 #define CAN_MODE 0
 
-extern Motor LeftPalletMotor;
-extern Motor RightPalletMotor;
+extern Motor LeftTrackMotor;
+extern Motor RightTrackMotor;
 extern Motor BrushesMotor;
 
 #endif /* _GLOBALS_H_ */

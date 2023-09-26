@@ -15,7 +15,6 @@
 #include <Arduino.h>
 #include "pinDefinitions.h"
 
-#define JOYSTICK_DEAD_ZONE 		(5)
 #define MIN_MOTOR_SPEED			(3)
 #define MAX_MOTOR_SPEED			(85)
 #define RAMP_UP_SPEED           (5)
@@ -23,8 +22,8 @@
 
 typedef enum
 {
-    LEFT_PALLET,
-    RIGHT_PALLET,
+    LEFT_TRACK,
+    RIGHT_TRACK,
     BRUSHES
 }MotorPosition_t;
 
@@ -52,7 +51,6 @@ private:
     uint8_t speedControlPin;
     uint8_t stopPin;
     uint8_t errorPin;
-    uint8_t joystickDeadZone;
     uint8_t minMotorSpeed;
     uint8_t maxMotorSpeed;
     uint8_t rampUpSpeed;

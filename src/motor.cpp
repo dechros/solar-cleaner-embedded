@@ -20,13 +20,13 @@ void Motor::Init()
 {
     switch (motorPosition)
     {
-        case LEFT_PALLET:
+        case LEFT_TRACK:
         {
-            forwardPin = PALLET_LEFT_FORWARD_TURN_PIN;
-            reversePin = PALLET_LEFT_REVERSE_TURN_PIN;
-            speedControlPin = PALLET_LEFT_SPEED_CONTROL_PIN;
-            stopPin = PALLET_LEFT_STOP_PIN;
-            errorPin = PALLET_LEFT_ERROR_PIN;
+            forwardPin = TRACK_LEFT_FORWARD_TURN_PIN;
+            reversePin = TRACK_LEFT_REVERSE_TURN_PIN;
+            speedControlPin = TRACK_LEFT_SPEED_CONTROL_PIN;
+            stopPin = TRACK_LEFT_STOP_PIN;
+            errorPin = TRACK_LEFT_ERROR_PIN;
 
             digitalWrite(forwardPin, HIGH);
             digitalWrite(stopPin, LOW);
@@ -41,13 +41,13 @@ void Motor::Init()
 
             break;
         }
-        case RIGHT_PALLET:
+        case RIGHT_TRACK:
         {
-            forwardPin = PALLET_RIGHT_FORWARD_TURN_PIN;
-            reversePin = PALLET_RIGHT_REVERSE_TURN_PIN;
-            speedControlPin = PALLET_RIGHT_SPEED_CONTROL_PIN;
-            stopPin = PALLET_RIGHT_STOP_PIN;
-            errorPin = PALLET_RIGHT_ERROR_PIN;
+            forwardPin = TRACK_RIGHT_FORWARD_TURN_PIN;
+            reversePin = TRACK_RIGHT_REVERSE_TURN_PIN;
+            speedControlPin = TRACK_RIGHT_SPEED_CONTROL_PIN;
+            stopPin = TRACK_RIGHT_STOP_PIN;
+            errorPin = TRACK_RIGHT_ERROR_PIN;
 
             digitalWrite(forwardPin, LOW);
             digitalWrite(stopPin, LOW);
@@ -89,7 +89,6 @@ void Motor::Init()
         }
     }
 
-    joystickDeadZone = JOYSTICK_DEAD_ZONE;
     minMotorSpeed = MIN_MOTOR_SPEED;
     maxMotorSpeed = MAX_MOTOR_SPEED;
     rampUpSpeed = RAMP_UP_SPEED;
@@ -154,13 +153,13 @@ void Motor::RunAlgorithm()
             {
                 switch (motorPosition)
                 {
-                    case LEFT_PALLET:
+                    case LEFT_TRACK:
                     {
                         digitalWrite(forwardPin, HIGH);
                         digitalWrite(reversePin, LOW);
                         break;
                     }
-                    case RIGHT_PALLET:
+                    case RIGHT_TRACK:
                     {
                         digitalWrite(forwardPin, LOW);
                         digitalWrite(reversePin, HIGH);
@@ -182,13 +181,13 @@ void Motor::RunAlgorithm()
             {
                 switch (motorPosition)
                 {
-                    case LEFT_PALLET:
+                    case LEFT_TRACK:
                     {
                         digitalWrite(forwardPin, LOW);
                         digitalWrite(reversePin, HIGH);
                         break;
                     }
-                    case RIGHT_PALLET:
+                    case RIGHT_TRACK:
                     {
                         digitalWrite(forwardPin, HIGH);
                         digitalWrite(reversePin, LOW);

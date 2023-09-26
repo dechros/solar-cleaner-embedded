@@ -3,6 +3,7 @@
 
 bool updateMotorsParameters = false;
 bool sendRemoteStartMessage = false;
+bool checkMessageTimeoutFlag = false;
 
 uint8_t remoteStartCounter = 0;
 
@@ -27,6 +28,7 @@ ISR(TIMER1_COMPA_vect)
     if (remoteStartCounter == 20) /* 1 sec */
     {
         sendRemoteStartMessage = true;
+		checkMessageTimeoutFlag = true;
         remoteStartCounter = 0;
     }
 }

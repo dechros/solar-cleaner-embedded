@@ -27,17 +27,17 @@
 
 #define WATER_ON_OFF_PIN                    (5)
 
-#define PALLET_LEFT_SPEED_CONTROL_PIN       (46)
-#define PALLET_LEFT_FORWARD_TURN_PIN        (9)
-#define PALLET_LEFT_STOP_PIN                (8)
-#define PALLET_LEFT_REVERSE_TURN_PIN        (7)
-#define PALLET_LEFT_ERROR_PIN               (47)
+#define TRACK_LEFT_SPEED_CONTROL_PIN       (46)
+#define TRACK_LEFT_FORWARD_TURN_PIN        (9)
+#define TRACK_LEFT_STOP_PIN                (8)
+#define TRACK_LEFT_REVERSE_TURN_PIN        (7)
+#define TRACK_LEFT_ERROR_PIN               (47)
 
-#define PALLET_RIGHT_SPEED_CONTROL_PIN      (45)
-#define PALLET_RIGHT_FORWARD_TURN_PIN       (6)
-#define PALLET_RIGHT_STOP_PIN               (4)
-#define PALLET_RIGHT_REVERSE_TURN_PIN       (3)
-#define PALLET_RIGHT_ERROR_PIN              (43)
+#define TRACK_RIGHT_SPEED_CONTROL_PIN      (45)
+#define TRACK_RIGHT_FORWARD_TURN_PIN       (6)
+#define TRACK_RIGHT_STOP_PIN               (4)
+#define TRACK_RIGHT_REVERSE_TURN_PIN       (3)
+#define TRACK_RIGHT_ERROR_PIN              (43)
 
 #define PC_CONNECTION_UART_TX_PIN           (1)
 #define PC_CONNECTION_UART_RX_PIN           (0)
