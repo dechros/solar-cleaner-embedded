@@ -22,11 +22,14 @@ void setup()
 	LeftTrackMotor.Init();
 	RightTrackMotor.Init();
 	BrushesMotor.Init();
+	InitTimer();
+
 #if CAN_MODE
 	InitCANBus();
 #else
 	InitRouterCommunication();
 #endif
+	Serial.println("Init Complete");
 }
 
 void loop()

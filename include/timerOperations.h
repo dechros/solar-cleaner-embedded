@@ -12,7 +12,10 @@
 #ifndef _TIMER_OPERATIONS_H_
 #define _TIMER_OPERATIONS_H_
 
+void InitTimer(void);
+
 extern bool updateMotorsParameters;
 extern bool sendRemoteStartMessage;
+extern bool checkMessageTimeoutFlag;
 
 #endif /* _TIMER_OPERATIONS_H_ */

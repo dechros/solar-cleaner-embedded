@@ -7,7 +7,7 @@ bool checkMessageTimeoutFlag = false;
 
 uint8_t remoteStartCounter = 0;
 
-void SetupTimer()
+void InitTimer()
 {
     /* 50ms timer interrupt for motor speed control */
 	cli();

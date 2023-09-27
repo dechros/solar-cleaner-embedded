@@ -1,8 +1,17 @@
 #include "routerOperations.h"
 #include "globals.h"
+#include "waterPumpDriver.h"
 
 uint8_t bufferClearCounter = 0;
 bool messageCameFlag = false;
+
+typedef struct
+{
+    uint8_t rightTrackSpeed;
+    uint8_t leftTrackSpeed;
+    MotorDirectionType_t rightTrackDirection;
+    MotorDirectionType_t leftTrackDirection;
+}TrackInfo_t;
 
 static TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY);
 
@@ -22,38 +31,40 @@ static bool ControlChecksum(uint8_t *dataPointer, uint8_t size)
     return (dataPointer[size - 1] == checksum);
 }
 
-typedef struct
-{
-    uint8_t rightTrackSpeed;
-    uint8_t leftTrackSpeed;
-    MotorDirectionType_t rightTrackDirection;
-    MotorDirectionType_t leftTrackDirection;
-}TrackInfo_t;
-
 static void ParseTCPMessage(TCPMessage_t readTCPMessage)
 {
     messageCameFlag = true;
-    TrackInfo_t trackInfo = JoystickAlgorithm(readTCPMessage.joystickX, readTCPMessage.joystickY);
-    RightTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.rightTrackSpeed / 3) * ((double)readTCPMessage.driveSpeed / MAX_SPEED)));
-    RightTrackMotor.SetTargetDirection(trackInfo.rightTrackDirection);
-    LeftTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.leftTrackSpeed / 3) * ((double)readTCPMessage.driveSpeed / MAX_SPEED)));
-    LeftTrackMotor.SetTargetDirection(trackInfo.leftTrackDirection);
-    BrushesMotor.SetTargetSpeed(readTCPMessage.brushSpeed);
-    if (readTCPMessage.brushFrontCW == 1)
+    if (readTCPMessage.emergencyButton == 1)
     {
-        BrushesMotor.SetTargetDirection(FORWARD);
-    }
-    else
-    {
-        BrushesMotor.SetTargetDirection(REVERSE);
-    }
-    if (readTCPMessage.waterButton == 1)
-    {
-        WaterPumpOn();
-    }
-    else
-    {
+        RightTrackMotor.Stop();
+        LeftTrackMotor.Stop();
+        BrushesMotor.Stop();
         WaterPumpOff();
+    }
+    else
+    {
+        TrackInfo_t trackInfo = JoystickAlgorithm(readTCPMessage.joystickX, readTCPMessage.joystickY);
+        RightTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.rightTrackSpeed / 3) * ((double)readTCPMessage.driveSpeed / MAX_SPEED)));
+        RightTrackMotor.SetTargetDirection(trackInfo.rightTrackDirection);
+        LeftTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.leftTrackSpeed / 3) * ((double)readTCPMessage.driveSpeed / MAX_SPEED)));
+        LeftTrackMotor.SetTargetDirection(trackInfo.leftTrackDirection);
+        BrushesMotor.SetTargetSpeed(readTCPMessage.brushSpeed);
+        if (readTCPMessage.brushFrontCW == 1)
+        {
+            BrushesMotor.SetTargetDirection(FORWARD);
+        }
+        else
+        {
+            BrushesMotor.SetTargetDirection(REVERSE);
+        }
+        if (readTCPMessage.waterButton == 1)
+        {
+            WaterPumpOn();
+        }
+        else
+        {
+            WaterPumpOff();
+        }
     }
 }
 
@@ -78,6 +89,7 @@ void CheckTCPMessage()
                     ParseTCPMessage(readTCPMessage);
                     /* Send ACK to router */
                     ROUTER_SERIAL.write(ACK_MESSAGE, 3);
+                    Serial.write((uint8_t*)&readTCPMessage, sizeof(TCPMessage_t));
                 }
                 else
                 {
@@ -116,6 +128,7 @@ void CheckMessageTimeout()
         LeftTrackMotor.Stop();
         RightTrackMotor.Stop();
         BrushesMotor.Stop();
+        Serial.println("Stopping");
     }
     messageCameFlag = false;
 }
