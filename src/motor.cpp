@@ -108,6 +108,22 @@ uint8_t Motor::IsError()
 
 void Motor::SetTargetDirection(MotorDirectionType_t direction)
 {
+    /**
+     * @note: Target direction actually refers to 
+     *        motors rotation direction. Clockwise or Counter-clockwise
+     *        FORWARD => Clockwise rotation
+     *        REVERSE => Counter-clockwise rotation
+     *  
+     *        So when we want to move machine forward. We need to make
+     *        Left Motor Direction = FORWARD
+     *        Right Motor Direction = REVERSE
+     * 
+     *        It actually makes sense because when right motor turns clockwise
+     *        it moves machine to reverse. But when left motor turns clockwise
+     *        it moves machine to forward.
+     * 
+     * @summary: Right track direction means the opposite direction for machine
+     */
     targetDirection = direction;
 }
 
@@ -151,59 +167,13 @@ void Motor::RunAlgorithm()
         {
             if (targetDirection == FORWARD)
             {
-                switch (motorPosition)
-                {
-                    case LEFT_TRACK:
-                    {
-                        digitalWrite(forwardPin, HIGH);
-                        digitalWrite(reversePin, LOW);
-                        break;
-                    }
-                    case RIGHT_TRACK:
-                    {
-                        digitalWrite(forwardPin, LOW);
-                        digitalWrite(reversePin, HIGH);
-                        break;
-                    }
-                    case BRUSHES:
-                    {
-                        digitalWrite(forwardPin, HIGH);
-                        digitalWrite(reversePin, LOW);
-                        break;
-                    }
-                    default:
-                    {
-                        break;
-                    }
-                }
+                digitalWrite(forwardPin, HIGH);
+                digitalWrite(reversePin, LOW);
             }
             else
             {
-                switch (motorPosition)
-                {
-                    case LEFT_TRACK:
-                    {
-                        digitalWrite(forwardPin, LOW);
-                        digitalWrite(reversePin, HIGH);
-                        break;
-                    }
-                    case RIGHT_TRACK:
-                    {
-                        digitalWrite(forwardPin, HIGH);
-                        digitalWrite(reversePin, LOW);
-                        break;
-                    }
-                    case BRUSHES:
-                    {
-                        digitalWrite(forwardPin, LOW);
-                        digitalWrite(reversePin, HIGH);
-                        break;
-                    }
-                    default:
-                    {
-                        break;
-                    }
-                }
+                digitalWrite(forwardPin, LOW);
+                digitalWrite(reversePin, HIGH);
             }
             currentDirection = targetDirection;
         }

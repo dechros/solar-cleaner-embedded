@@ -34,7 +34,6 @@ void setup()
 
 void loop()
 {
-
 #if CAN_MODE
 	CheckCANMessage();
 	if (sendRemoteStartMessage == true)
@@ -57,5 +56,4 @@ void loop()
 		BrushesMotor.RunAlgorithm();
 		updateMotorsParameters = false;
 	}
-
 }

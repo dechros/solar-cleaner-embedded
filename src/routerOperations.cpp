@@ -143,7 +143,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         ((joystickYSigned < JOYSTICK_DEAD_ZONE_ROUTER) && (joystickYSigned > -JOYSTICK_DEAD_ZONE_ROUTER)))
     {
         /* No Movement */
-        trackInfo.rightTrackDirection = FORWARD;
+        trackInfo.rightTrackDirection = REVERSE;
         trackInfo.leftTrackDirection = FORWARD;
         trackInfo.rightTrackSpeed = 0;
         trackInfo.leftTrackSpeed = 0;
@@ -152,7 +152,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         ((joystickYSigned < JOYSTICK_DEAD_ZONE_ROUTER) && (joystickYSigned > -JOYSTICK_DEAD_ZONE_ROUTER)))
     {
         /* Rotate machine clockwise (Both Tracks Maximum) */
-        trackInfo.rightTrackDirection = REVERSE;
+        trackInfo.rightTrackDirection = FORWARD;
         trackInfo.leftTrackDirection = FORWARD;
         trackInfo.rightTrackSpeed = (uint8_t)(MAX_SPEED * ((double)joystickXSigned / JOYSTICK_MAX_VALUE));
         trackInfo.leftTrackSpeed = (uint8_t)(MAX_SPEED * ((double)joystickXSigned / JOYSTICK_MAX_VALUE));
@@ -161,7 +161,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         ((joystickYSigned < JOYSTICK_DEAD_ZONE_ROUTER) && (joystickYSigned > -JOYSTICK_DEAD_ZONE_ROUTER)))
     {
         /* Rotate machine counter-clockwise (Both Tracks Maximum) */
-        trackInfo.rightTrackDirection = FORWARD;
+        trackInfo.rightTrackDirection = REVERSE;
         trackInfo.leftTrackDirection = REVERSE;
         trackInfo.rightTrackSpeed = (uint8_t)(MAX_SPEED * ((double)abs(joystickXSigned) / JOYSTICK_MAX_VALUE));
         trackInfo.leftTrackSpeed = (uint8_t)(MAX_SPEED * ((double)abs(joystickXSigned) / JOYSTICK_MAX_VALUE));
@@ -170,7 +170,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         ((joystickXSigned < JOYSTICK_DEAD_ZONE_ROUTER) && (joystickXSigned > -JOYSTICK_DEAD_ZONE_ROUTER)))
     {
         /* Move machine forward (Both Tracks Maximum) */
-        trackInfo.rightTrackDirection = FORWARD;
+        trackInfo.rightTrackDirection = REVERSE;
         trackInfo.leftTrackDirection = FORWARD;
         trackInfo.rightTrackSpeed = (uint8_t)(MAX_SPEED * ((double)joystickYSigned / JOYSTICK_MAX_VALUE));
         trackInfo.leftTrackSpeed = (uint8_t)(MAX_SPEED * ((double)joystickYSigned / JOYSTICK_MAX_VALUE));
@@ -179,7 +179,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         ((joystickXSigned < JOYSTICK_DEAD_ZONE_ROUTER) && (joystickXSigned > -JOYSTICK_DEAD_ZONE_ROUTER)))
     {
         /* Move machine reverse (Both Tracks Maximum) */
-        trackInfo.rightTrackDirection = REVERSE;
+        trackInfo.rightTrackDirection = FORWARD;
         trackInfo.leftTrackDirection = REVERSE;
         trackInfo.rightTrackSpeed = (uint8_t)(MAX_SPEED * ((double)abs(joystickYSigned) / JOYSTICK_MAX_VALUE));
         trackInfo.leftTrackSpeed = (uint8_t)(MAX_SPEED * ((double)abs(joystickYSigned) / JOYSTICK_MAX_VALUE));
@@ -208,7 +208,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         if (degree > 45)
         {
             double angleMultiplier = ((degree - 45)) / 45;
-            trackInfo.rightTrackDirection = FORWARD;
+            trackInfo.rightTrackDirection = REVERSE;
             trackInfo.leftTrackDirection = FORWARD;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -218,7 +218,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         else if (degree < 45 )
         {
             double angleMultiplier = ((45 - degree)) / 45;
-            trackInfo.rightTrackDirection = REVERSE;
+            trackInfo.rightTrackDirection = FORWARD;
             trackInfo.leftTrackDirection = FORWARD;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -227,7 +227,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         }
         else if(degree == 45)
         {
-            trackInfo.rightTrackDirection = FORWARD;
+            trackInfo.rightTrackDirection = REVERSE;
             trackInfo.leftTrackDirection = FORWARD;
             trackInfo.rightTrackSpeed = 0;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
@@ -259,7 +259,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         if (degree > 45)
         {
             double angleMultiplier = ((degree - 45)) / 45;
-            trackInfo.rightTrackDirection = FORWARD;
+            trackInfo.rightTrackDirection = REVERSE;
             trackInfo.leftTrackDirection = FORWARD;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -269,7 +269,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         else if (degree < 45 )
         {
             double angleMultiplier = ((45 - degree)) / 45;
-            trackInfo.rightTrackDirection = FORWARD;
+            trackInfo.rightTrackDirection = REVERSE;
             trackInfo.leftTrackDirection = REVERSE;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -278,7 +278,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         }
         else if(degree == 45)
         {
-            trackInfo.rightTrackDirection = FORWARD;
+            trackInfo.rightTrackDirection = REVERSE;
             trackInfo.leftTrackDirection = FORWARD;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -310,7 +310,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         if (degree > 45)
         {
             double angleMultiplier = ((degree - 45)) / 45;
-            trackInfo.rightTrackDirection = REVERSE;
+            trackInfo.rightTrackDirection = FORWARD;
             trackInfo.leftTrackDirection = REVERSE;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -320,7 +320,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         else if (degree < 45 )
         {
             double angleMultiplier = ((45 - degree)) / 45;
-            trackInfo.rightTrackDirection = FORWARD;
+            trackInfo.rightTrackDirection = REVERSE;
             trackInfo.leftTrackDirection = REVERSE;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -329,7 +329,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         }
         else if(degree == 45)
         {
-            trackInfo.rightTrackDirection = FORWARD;
+            trackInfo.rightTrackDirection = REVERSE;
             trackInfo.leftTrackDirection = REVERSE;
             trackInfo.rightTrackSpeed = 0;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
@@ -361,7 +361,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         if (degree > 45)
         {
             double angleMultiplier = ((degree - 45)) / 45;
-            trackInfo.rightTrackDirection = REVERSE;
+            trackInfo.rightTrackDirection = FORWARD;
             trackInfo.leftTrackDirection = REVERSE;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -371,7 +371,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         else if (degree < 45 )
         {
             double angleMultiplier = ((45 - degree)) / 45;
-            trackInfo.rightTrackDirection = REVERSE;
+            trackInfo.rightTrackDirection = FORWARD;
             trackInfo.leftTrackDirection = FORWARD;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
@@ -380,7 +380,7 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
         }
         else if(degree == 45)
         {
-            trackInfo.rightTrackDirection = REVERSE;
+            trackInfo.rightTrackDirection = FORWARD;
             trackInfo.leftTrackDirection = FORWARD;
             float hipotenus = sqrtf((joystickXSigned*joystickXSigned) + (joystickYSigned*joystickYSigned));
             hipotenus = (hipotenus > JOYSTICK_MAX_VALUE) ? JOYSTICK_MAX_VALUE : hipotenus;
