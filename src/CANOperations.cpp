@@ -16,9 +16,7 @@ void InitCANBus()
     memset(&CANMessage, 0, sizeof(Message_t));
     while (CAN_OK != CAN.begin(MCP_ANY, CAN_250KBPS, MCP_16MHZ))
 	{
-		delay(100);
-		Serial.println("CAN BUS Shield init fail");
-		Serial.println(" Init CAN BUS Shield again");	
+		delay(100);	
 	}
 	CAN.setMode(MCP_NORMAL);
 }

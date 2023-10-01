@@ -87,18 +87,16 @@ void CheckTCPMessage()
                 if (result == true)
                 {
                     ParseTCPMessage(readTCPMessage);
-                    /* Send ACK to router */
                     ROUTER_SERIAL.write(ACK_MESSAGE, 3);
-                    Serial.write((uint8_t*)&readTCPMessage, sizeof(TCPMessage_t));
                 }
                 else
                 {
-                    Serial.println("Checksum Error!");
+                    /* Checksum Error! Do not parse wrong message */
                 }
             }
             else
             {
-                Serial.println("Unkown Header!");
+                /* Unknown header */
             }
         }
         else if (readData == 'T' && tcpBufferSize < sizeof(TCPMessage_t))
@@ -109,13 +107,13 @@ void CheckTCPMessage()
             {
                 bufferClearCounter = 0;
                 ROUTER_SERIAL.read();
-                Serial.println("Half Message! Discarded!");
+                /* Half Message! Discarded! */
             }
         }
         else
         {
             ROUTER_SERIAL.read();
-            Serial.println("Unkown Header!");
+            /* Unknown header byte discard */
         }
     }
 }
@@ -128,7 +126,6 @@ void CheckMessageTimeout()
         LeftTrackMotor.Stop();
         RightTrackMotor.Stop();
         BrushesMotor.Stop();
-        Serial.println("Stopping");
     }
     messageCameFlag = false;
 }

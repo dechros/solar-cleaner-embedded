@@ -17,7 +17,6 @@
 
 void setup()
 {
-	Serial.begin(115200);
 	InitPins();
 	LeftTrackMotor.Init();
 	RightTrackMotor.Init();
@@ -29,7 +28,6 @@ void setup()
 #else
 	InitRouterCommunication();
 #endif
-	Serial.println("Init Complete");
 }
 
 void loop()
@@ -51,9 +49,9 @@ void loop()
 #endif
 	if (updateMotorsParameters == true)
 	{
-		LeftTrackMotor.RunAlgorithm();
-		RightTrackMotor.RunAlgorithm();
-		BrushesMotor.RunAlgorithm();
+		LeftTrackMotor.RunRampSupport();
+		RightTrackMotor.RunRampSupport();
+		BrushesMotor.RunRampSupport();
 		updateMotorsParameters = false;
 	}
 }

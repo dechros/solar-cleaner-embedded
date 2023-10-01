@@ -132,7 +132,7 @@ void Motor::SetTargetSpeed(uint8_t speed)
     targetSpeed = speed;
 }
 
-void Motor::RunAlgorithm()
+void Motor::RunRampSupport()
 {
     if (targetDirection == currentDirection)
     {

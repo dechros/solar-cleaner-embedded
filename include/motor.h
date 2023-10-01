@@ -42,7 +42,7 @@ public:
     uint8_t IsError(void);
     void SetTargetDirection(MotorDirectionType_t direction);
     void SetTargetSpeed(uint8_t speed);
-    void RunAlgorithm(void);
+    void RunRampSupport(void);
 
 private:
     MotorPosition_t motorPosition;

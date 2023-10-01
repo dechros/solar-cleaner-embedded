@@ -71,37 +71,31 @@ void MCP2515InterruptCallback()
 void Encoder1InterruptACallback()
 {
     /* TODO: Implement Logic */
-    Serial.println("1ACallBack!");
 }
 
 void Encoder1InterruptBCallback()
 {
     /* TODO: Implement Logic */
-    Serial.println("1BCallBack!");
 }
 
 void Encoder1Interrupt0Callback()
 {
     /* TODO: Implement Logic */
-    Serial.println("10CallBack!");
 }
 
 void Encoder2InterruptACallback()
 {
     /* TODO: Implement Logic */
-    Serial.println("2ACallBack!");
 }
 
 void Encoder2InterruptBCallback()
 {
     /* TODO: Implement Logic */
-    Serial.println("2BCallBack!");
 }
 
 void Encoder2Interrupt0Callback()
 {
     /* TODO: Implement Logic */
-    Serial.println("20CallBack!");
 }
 
 int digitalReadExtended(uint8_t pin)
