@@ -10,7 +10,7 @@
 #define TCP_MESSAGE_HEADER      	"TCP"
 #define JOYSTICK_MIDDLE_VALUE		(127)
 #define JOYSTICK_MAX_VALUE			(127)
-#define JOYSTICK_DEAD_ZONE_ROUTER	(5)
+#define JOYSTICK_DEAD_ZONE_ROUTER	(10)
 #define MAX_SPEED					(255)
 
 void InitRouterCommunication(void);

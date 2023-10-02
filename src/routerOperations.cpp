@@ -34,7 +34,7 @@ static bool ControlChecksum(uint8_t *dataPointer, uint8_t size)
 static void ParseTCPMessage(TCPMessage_t readTCPMessage)
 {
     messageCameFlag = true;
-    if (readTCPMessage.emergencyButton == 1)
+    if (readTCPMessage.emergencyButton == 0)
     {
         RightTrackMotor.Stop();
         LeftTrackMotor.Stop();
@@ -44,11 +44,11 @@ static void ParseTCPMessage(TCPMessage_t readTCPMessage)
     else
     {
         TrackInfo_t trackInfo = JoystickAlgorithm(readTCPMessage.joystickX, readTCPMessage.joystickY);
-        RightTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.rightTrackSpeed / 3) * ((double)readTCPMessage.driveSpeed / MAX_SPEED)));
+        RightTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.rightTrackSpeed / 3) * ((double)readTCPMessage.brushSpeed / MAX_SPEED)));
         RightTrackMotor.SetTargetDirection(trackInfo.rightTrackDirection);
-        LeftTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.leftTrackSpeed / 3) * ((double)readTCPMessage.driveSpeed / MAX_SPEED)));
+        LeftTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.leftTrackSpeed / 3) * ((double)readTCPMessage.brushSpeed / MAX_SPEED)));
         LeftTrackMotor.SetTargetDirection(trackInfo.leftTrackDirection);
-        BrushesMotor.SetTargetSpeed(readTCPMessage.brushSpeed);
+        BrushesMotor.SetTargetSpeed(readTCPMessage.driveSpeed);
         if (readTCPMessage.brushFrontCW == 1)
         {
             BrushesMotor.SetTargetDirection(FORWARD);
