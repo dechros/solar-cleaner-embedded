@@ -30,7 +30,8 @@ typedef enum
 typedef enum
 {
     FORWARD,
-    REVERSE
+    REVERSE,
+    STOP
 }MotorDirectionType_t;
 
 class Motor

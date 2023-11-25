@@ -1,12 +1,12 @@
 /**
  * @file motor.cpp
  * @author Talha Cetin (talhacetin96@hotmail.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2023-09-24
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 
 #include "motor.h"
@@ -28,17 +28,6 @@ void Motor::Init()
             stopPin = TRACK_LEFT_STOP_PIN;
             errorPin = TRACK_LEFT_ERROR_PIN;
 
-            digitalWrite(forwardPin, HIGH);
-            digitalWrite(stopPin, LOW);
-            digitalWrite(reversePin, LOW);
-            analogWrite(speedControlPin, 0);
-
-            currentSpeed = 0;
-            targetSpeed = 0;
-            currentDirection = FORWARD;
-            targetDirection = FORWARD;
-            defaultDirection = FORWARD;
-
             break;
         }
         case RIGHT_TRACK:
@@ -48,17 +37,6 @@ void Motor::Init()
             speedControlPin = TRACK_RIGHT_SPEED_CONTROL_PIN;
             stopPin = TRACK_RIGHT_STOP_PIN;
             errorPin = TRACK_RIGHT_ERROR_PIN;
-
-            digitalWrite(forwardPin, LOW);
-            digitalWrite(stopPin, LOW);
-            digitalWrite(reversePin, HIGH);
-            analogWrite(speedControlPin, 0);
-
-            currentSpeed = 0;
-            targetSpeed = 0;
-            currentDirection = REVERSE;
-            targetDirection = REVERSE;
-            defaultDirection = REVERSE;
 
             break;
         }
@@ -70,17 +48,6 @@ void Motor::Init()
             stopPin = BRUSHES_STOP_PIN;
             errorPin = BRUSHES_ERROR_PIN;
 
-            digitalWrite(forwardPin, HIGH);
-            digitalWrite(stopPin, LOW);
-            digitalWrite(reversePin, LOW);
-            analogWrite(speedControlPin, 0);
-
-            currentSpeed = 0;
-            targetSpeed = 0;
-            currentDirection = FORWARD;
-            targetDirection = FORWARD;
-            defaultDirection = FORWARD;
-
             break;
         }
         default:
@@ -88,6 +55,17 @@ void Motor::Init()
             break;
         }
     }
+
+    digitalWrite(forwardPin, LOW);
+    digitalWrite(stopPin, HIGH);
+    digitalWrite(reversePin, LOW);
+    analogWrite(speedControlPin, 0);
+
+    currentSpeed = 0;
+    targetSpeed = 0;
+    currentDirection = STOP;
+    targetDirection = STOP;
+    defaultDirection = STOP;
 
     minMotorSpeed = MIN_MOTOR_SPEED;
     maxMotorSpeed = MAX_MOTOR_SPEED;
@@ -109,19 +87,19 @@ uint8_t Motor::IsError()
 void Motor::SetTargetDirection(MotorDirectionType_t direction)
 {
     /**
-     * @note: Target direction actually refers to 
+     * @note: Target direction actually refers to
      *        motors rotation direction. Clockwise or Counter-clockwise
      *        FORWARD => Clockwise rotation
      *        REVERSE => Counter-clockwise rotation
-     *  
+     *
      *        So when we want to move machine forward. We need to make
      *        Left Motor Direction = FORWARD
      *        Right Motor Direction = REVERSE
-     * 
+     *
      *        It actually makes sense because when right motor turns clockwise
      *        it moves machine to reverse. But when left motor turns clockwise
      *        it moves machine to forward.
-     * 
+     *
      * @summary: Right track direction means the opposite direction for machine
      */
     targetDirection = direction;
@@ -169,11 +147,19 @@ void Motor::RunRampSupport()
             {
                 digitalWrite(forwardPin, HIGH);
                 digitalWrite(reversePin, LOW);
+                digitalWrite(stopPin, LOW);
+            }
+            else if (targetDirection == REVERSE)
+            {
+                digitalWrite(forwardPin, LOW);
+                digitalWrite(reversePin, HIGH);
+                digitalWrite(stopPin, LOW);
             }
             else
             {
                 digitalWrite(forwardPin, LOW);
-                digitalWrite(reversePin, HIGH);
+                digitalWrite(reversePin, LOW);
+                digitalWrite(stopPin, HIGH);
             }
             currentDirection = targetDirection;
         }
