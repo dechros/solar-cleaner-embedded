@@ -10,6 +10,7 @@
 MCP_CAN CAN(SPI_CS_PIN); 
 Message_t CANMessage;
 uint8_t RPM_SPEED = 3; /* 1 - 5 */
+uint8_t waterPumpButtonOldState = 0;
 
 void InitCANBus()
 {
@@ -113,14 +114,11 @@ void CheckCANMessage()
 					BrushesMotor.SetTargetDirection(REVERSE);
 				}
 
-				if (CANMessage.byte3.bit7 == 1)
+				if (CANMessage.byte3.bit7 == 1 && waterPumpButtonOldState == 0)
 				{
-					WaterPumpOn();
+					WaterPumpToggle();
 				}
-				else if (CANMessage.byte3.bit7 == 0)
-				{
-					WaterPumpOff();
-				}
+				waterPumpButtonOldState = CANMessage.byte3.bit7;
 			}
 		}
 	}

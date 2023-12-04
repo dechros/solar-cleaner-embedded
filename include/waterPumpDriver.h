@@ -27,4 +27,10 @@ void WaterPumpOn(void);
  */
 void WaterPumpOff(void);
 
+/**
+ * @brief Toggles the water pump by writing LOW or HIGH to related pin.
+ * 
+ */
+void WaterPumpToggle(void);
+
 #endif

@@ -20,3 +20,8 @@ void WaterPumpOff()
 {
     digitalWrite(WATER_ON_OFF_PIN, LOW);
 }
+
+void WaterPumpToggle()
+{
+    digitalWrite(WATER_ON_OFF_PIN, !digitalRead(WATER_ON_OFF_PIN));
+}
