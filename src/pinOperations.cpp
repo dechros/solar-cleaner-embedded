@@ -38,22 +38,14 @@ void InitPins()
     pinMode(TRACK_RIGHT_REVERSE_TURN_PIN , OUTPUT);
     pinMode(TRACK_RIGHT_ERROR_PIN        , INPUT);
 
-    pinMode(ENCODER_1_A_PIN, INPUT_PULLUP);
-    pinMode(ENCODER_1_B_PIN, INPUT_PULLUP);
-    pinMode(ENCODER_1_0_PIN, INPUT_PULLUP);
-    pinMode(ENCODER_2_A_PIN, INPUT_PULLUP);
-    pinMode(ENCODER_2_B_PIN, INPUT_PULLUP);
-    pinMode(ENCODER_2_0_PIN, INPUT_PULLUP);
+    pinMode(SENSOR_FRONT, INPUT);
+    pinMode(SENSOR_REAR, INPUT);
+    pinMode(SENSOR_LEFT, INPUT);
+    pinMode(SENSOR_RIGHT, INPUT);
 
     pinModeExtended(PJ2, INPUT);
 
     enableInterrupt(CAN_INTERRUPT_PIN, MCP2515InterruptCallback, CHANGE);
-    enableInterrupt(ENCODER_1_A_PIN, Encoder1InterruptACallback, RISING);
-    enableInterrupt(ENCODER_1_B_PIN, Encoder1InterruptBCallback, RISING);
-    enableInterrupt(ENCODER_1_0_PIN, Encoder1Interrupt0Callback, RISING);
-    enableInterrupt(ENCODER_2_A_PIN, Encoder2InterruptACallback, RISING);
-    enableInterrupt(ENCODER_2_B_PIN, Encoder2InterruptBCallback, RISING);
-    enableInterrupt(ENCODER_2_0_PIN, Encoder2Interrupt0Callback, RISING);
 }
 
 void MCP2515InterruptCallback()
@@ -66,36 +58,6 @@ void MCP2515InterruptCallback()
     {
         CANMessageReceived = false;
     }
-}
-
-void Encoder1InterruptACallback()
-{
-    /* TODO: Implement Logic */
-}
-
-void Encoder1InterruptBCallback()
-{
-    /* TODO: Implement Logic */
-}
-
-void Encoder1Interrupt0Callback()
-{
-    /* TODO: Implement Logic */
-}
-
-void Encoder2InterruptACallback()
-{
-    /* TODO: Implement Logic */
-}
-
-void Encoder2InterruptBCallback()
-{
-    /* TODO: Implement Logic */
-}
-
-void Encoder2Interrupt0Callback()
-{
-    /* TODO: Implement Logic */
 }
 
 int digitalReadExtended(uint8_t pin)
