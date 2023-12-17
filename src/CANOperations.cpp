@@ -1,7 +1,7 @@
 #include "CANOperations.h"
 #include "globals.h"
 #include "pinOperations.h"
-#include "waterPumpDriver.h"
+#include "waterPump.h"
 #include "mcp_can.h"
 
 #define RPM_MAX_SPEED   		(5)
@@ -117,7 +117,7 @@ void CheckCANMessage()
 
 				if (CANMessage.byte3.waterPumpButton == 1 && waterPumpButtonOldState == 0)
 				{
-					WaterPumpToggle();
+					WaterPumpHandler.Request(TOGGLE); /* TODO: Will not stop at emergency because of toggle */
 				}
 				waterPumpButtonOldState = CANMessage.byte3.waterPumpButton;
 			}

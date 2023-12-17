@@ -3,10 +3,10 @@
 
 #define SOFTWARE_VERSION_MAJOR          1
 #define SOFTWARE_VERSION_MINOR          0
-#define SOFTWARE_VERSION_PATCH          0
+#define SOFTWARE_VERSION_PATCH          1
 
-#define SOFTWARE_UPDATE_DATE_DAY        25
-#define SOFTWARE_UPDATE_DATE_MONTH      9
+#define SOFTWARE_UPDATE_DATE_DAY        17
+#define SOFTWARE_UPDATE_DATE_MONTH      12
 #define SOFTWARE_UPDATE_DATE_YEAR       23
 
 #endif /* _SOFTWARE_VERSION_H_ */

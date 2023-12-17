@@ -1,35 +1,19 @@
 #include "eepromOperations.h"
+#include "globals.h"
 
-bool CRC16ErrorFlag = false;
-bool CRC32ErrorFlag = false;
-
-uint16_t errorWriteIndex = 0;
-
-void InitializeEEPROM()
+void InitParameters(void)
 {
-    EepromHeader_t eepromHeader;
-    EEPROM.get(EEPROM_START_ADDRESS, eepromHeader);
-    if (eepromHeader.errorCount == 0xFFFF)
+    uint8_t controlValue = 0;
+    EEPROM.get(0, controlValue);
+    if (controlValue != CONTROL_VALUE)
     {
-        eepromHeader.errorCount = 0;
+        ClearEEPROM();
+        SetDefaultParametersToEEPROM();
     }
-    if (eepromHeader.CRC16 == 0xFFFF)
-    {
-        eepromHeader.CRC16 = 0;
-    }
-    
-    const char companyName[SIZE_OF_COMPANY_NAME + 1] = COMPANY_NAME;
-    memcpy(&eepromHeader.companyName.character[0], companyName, SIZE_OF_COMPANY_NAME);
-    eepromHeader.version.major = SOFTWARE_VERSION_MAJOR;
-    eepromHeader.version.minor = SOFTWARE_VERSION_MINOR;
-    eepromHeader.version.patch = SOFTWARE_VERSION_PATCH;
-    eepromHeader.date.day = SOFTWARE_UPDATE_DATE_DAY;
-    eepromHeader.date.month = SOFTWARE_UPDATE_DATE_MONTH;
-    eepromHeader.date.year = SOFTWARE_UPDATE_DATE_YEAR;    
-    EEPROM.put(EEPROM_START_ADDRESS, eepromHeader);
+    SystemParameters = ReadParametersFromEEPROM();
 }
 
-void ClearEEPROM()
+void ClearEEPROM(void)
 {
     for (uint16_t i = 0; i < EEPROM.length(); i++)
     {
@@ -37,101 +21,111 @@ void ClearEEPROM()
     }
 }
 
-void LogError(Error_t error)
+void LogError(ErrorType_t error)
 {
-    uint16_t errorCount;
-    EEPROM.get(EEPROM_ERROR_COUNT_ADDRESS, errorCount);
-    EEPROM.put(EEPROM_ERROR_SECTOR_START_ADDRESS + (sizeof(Error_t)*errorCount), error);
-    errorCount = errorCount + 1;
-    EEPROM.put(EEPROM_ERROR_COUNT_ADDRESS, errorCount);
-}
-
-CompanyName_t GetCompanyName()
-{
-    CompanyName_t companyName;
-    EEPROM.get(EEPROM_COMPANY_NAME_ADDRESS, companyName);
-    return companyName;
-}
-
-Version_t GetSoftwareVersion()
-{
-    Version_t softwareVersion;
-    EEPROM.get(EEPROM_MAJOR_VERSION_ADDRESS, softwareVersion);
-    return softwareVersion;
-}
-
-Date_t GetSoftwareUpdateDate()
-{
-    Date_t softwareUpdateDate;
-    EEPROM.get(EEPROM_DAY_ADDRESS, softwareUpdateDate);
-    return softwareUpdateDate;
-}
-
-uint16_t GetErrorCount()
-{
-    uint16_t errorCount;
-    EEPROM.get(EEPROM_ERROR_COUNT_ADDRESS, errorCount);
-    return errorCount;
-}
-
-Error_t GetError(uint16_t errorNo)
-{
-    Error_t error;
-    uint16_t errorIndex = errorNo - 1;
-    EEPROM.get(EEPROM_ERROR_SECTOR_START_ADDRESS + (sizeof(Error_t)*errorIndex), error);
-    return error;
-}
-
-void ErrorHistoryClear()
-{
-    EepromHeader_t eepromHeader;
-    const char companyName[SIZE_OF_COMPANY_NAME + 1] = COMPANY_NAME;
-    memcpy(&eepromHeader.companyName.character[0], companyName, SIZE_OF_COMPANY_NAME);
-    eepromHeader.version.major = SOFTWARE_VERSION_MAJOR;
-    eepromHeader.version.minor = SOFTWARE_VERSION_MINOR;
-    eepromHeader.version.patch = SOFTWARE_VERSION_PATCH;
-    eepromHeader.date.day = SOFTWARE_UPDATE_DATE_DAY;
-    eepromHeader.date.month = SOFTWARE_UPDATE_DATE_MONTH;
-    eepromHeader.date.year = SOFTWARE_UPDATE_DATE_YEAR;  
-    eepromHeader.errorCount = 0;
-    EEPROM.put(EEPROM_START_ADDRESS, eepromHeader);
-    for (uint16_t i = sizeof(eepromHeader); i < EEPROM.length(); i++)
+    uint16_t address = 0;
+    switch (error)
     {
-        EEPROM.put(i, 255);
-    }
-}
-
-void SetCRC32()
-{
-    if (!CRC32ErrorFlag)
-    {
-        uint32_t readCrc32;
-        EEPROM.get(EEPROM_CRC32_ADDRESS, readCrc32);
-        readCrc32 = readCrc32 + 1;
-        if (readCrc32 > CRC32_VALUE)
+        case LEFT_ERROR:
         {
-            digitalWrite(BRUSHES_SPEED_CONTROL_PIN     , LOW);
-            digitalWrite(BRUSHES_FORWARD_TURN_PIN      , LOW);
-            digitalWrite(BRUSHES_STOP_PIN              , LOW);
-            digitalWrite(BRUSHES_REVERSE_TURN_PIN      , LOW);
-            digitalWrite(WATER_ON_OFF_PIN              , LOW);
-            digitalWrite(TRACK_LEFT_SPEED_CONTROL_PIN , LOW);
-            digitalWrite(TRACK_LEFT_FORWARD_TURN_PIN  , LOW);
-            digitalWrite(TRACK_LEFT_STOP_PIN          , LOW);
-            digitalWrite(TRACK_LEFT_REVERSE_TURN_PIN  , LOW);
-            digitalWrite(TRACK_RIGHT_SPEED_CONTROL_PIN, LOW);
-            digitalWrite(TRACK_RIGHT_FORWARD_TURN_PIN , LOW);
-            digitalWrite(TRACK_RIGHT_STOP_PIN         , LOW);
-            digitalWrite(TRACK_RIGHT_REVERSE_TURN_PIN , LOW);
-            CRC32ErrorFlag = true;
+            address = LEFT_ERROR_ADDRESS;
+            break;
         }
-        EEPROM.put(EEPROM_CRC32_ADDRESS, readCrc32);
+        case RIGHT_ERROR:
+        {
+            address = RIGHT_ERROR_ADDRESS;
+            break;
+        }
+        case BRUSH_ERROR:
+        {
+            address = BRUSH_ERROR_ADDRESS;
+            break;
+        }
+        case CONTROLLER_ERROR:
+        {
+            address = CONTROLLER_ERROR_ADDRESS;
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    if (address != 0)
+    {
+        uint16_t count = ReadErrorCountFromEEPROM(address);
+        count++;
+        WriteErrorCountToEEPROM(address, count);
     }
 }
 
-uint32_t GetCRC32()
+Parameters_t ReadParametersFromEEPROM(void)
 {
-    uint32_t crc32;
-    EEPROM.get(EEPROM_CRC32_ADDRESS, crc32);
-    return crc32;
+    Parameters_t parameters;
+    EEPROM.get(0, parameters);
+    return parameters;
+}
+
+void ReadMachineNameFromEEPROM(uint8_t* name)
+{
+    MachineName_t localName;
+    EEPROM.get(4, localName);
+    memcpy(name, localName.name, sizeof(MachineName_t));
+}
+
+void WriteParametersToEEPROM(Parameters_t parameters)
+{
+    EEPROM.put(0, parameters);
+}
+
+uint16_t ReadErrorCountFromEEPROM(uint16_t address)
+{
+    uint16_t count;
+    EEPROM.get(address, count);
+    return count;
+}
+
+void WriteErrorCountToEEPROM(uint16_t address, uint16_t count)
+{
+    EEPROM.put(address, count);
+}
+
+void SetDefaultParametersToEEPROM(void)
+{
+    Parameters_t parameters;
+    parameters.controlValue = CONTROL_VALUE;
+    parameters.versionMajor = SOFTWARE_VERSION_MAJOR;
+    parameters.versionMinor = SOFTWARE_VERSION_MINOR;
+    parameters.versionPatch = SOFTWARE_VERSION_PATCH;
+    for (uint8_t i = 0; i < 50; i++)
+    {
+        parameters.companyName[i] = '*';
+    }
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        parameters.machineIP[i] = '0';
+    }
+    parameters.leftErrorCount           = 0;
+    parameters.rightErrorCount          = 0;
+    parameters.brushErrorCount          = 0;
+    parameters.controllerErrorCount     = 0;
+    parameters.leftRampUp               = 5;
+    parameters.leftRampDown             = 5;
+    parameters.leftMinSpeed             = 0;
+    parameters.leftMaxSpeed             = 100;
+    parameters.rightRampUp              = 5;
+    parameters.rightRampDown            = 5;
+    parameters.rightMinSpeed            = 0;
+    parameters.rightMaxSpeed            = 100;
+    parameters.brushRampUp              = 5;
+    parameters.brushRampDown            = 5;
+    parameters.brushMinSpeed            = 0;
+    parameters.brushMaxSpeed            = 100;
+    parameters.joystickMiddleValue      = 0;    
+    parameters.joystickDeadZone         = 0; 
+    parameters.joystickMinValue         = 0; 
+    parameters.joystickMaxValue         = 255; 
+    parameters.potantiometerMinValue    = 0;        
+    parameters.potantiometerMaxValue    = 255;    
+    WriteParametersToEEPROM(parameters);
 }

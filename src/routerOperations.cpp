@@ -1,6 +1,6 @@
 #include "routerOperations.h"
 #include "globals.h"
-#include "waterPumpDriver.h"
+#include "waterPump.h"
 
 uint8_t bufferClearCounter = 0;
 bool messageCameFlag = false;
@@ -36,13 +36,11 @@ static void ParseTCPMessage(TCPMessage_t readTCPMessage)
     messageCameFlag = true;
     if (readTCPMessage.emergencyButton == 0)
     {
-        RightTrackMotor.Stop();
-        LeftTrackMotor.Stop();
-        BrushesMotor.Stop();
-        WaterPumpOff();
+        SystemStop();
     }
     else
     {
+        SystemResume();
         TrackInfo_t trackInfo = JoystickAlgorithm(readTCPMessage.joystickX, readTCPMessage.joystickY);
         RightTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.rightTrackSpeed / 3) * ((double)readTCPMessage.brushSpeed / MAX_SPEED)));
         RightTrackMotor.SetTargetDirection(trackInfo.rightTrackDirection);
@@ -59,11 +57,11 @@ static void ParseTCPMessage(TCPMessage_t readTCPMessage)
         }
         if (readTCPMessage.waterButton == 1)
         {
-            WaterPumpOn();
+            WaterPumpHandler.Request(TURN_ON);
         }
         else
         {
-            WaterPumpOff();
+           WaterPumpHandler.Request(TURN_OFF);
         }
     }
 }
@@ -123,9 +121,7 @@ void CheckMessageTimeout()
     /* No message came in 1 sec */
     if (messageCameFlag == false)
     {
-        LeftTrackMotor.Stop();
-        RightTrackMotor.Stop();
-        BrushesMotor.Stop();
+        SystemStop();
     }
     messageCameFlag = false;
 }

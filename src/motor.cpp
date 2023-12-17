@@ -10,6 +10,7 @@
  */
 
 #include "motor.h"
+#include "globals.h"
 
 Motor::Motor(MotorPosition_t position)
 {
@@ -67,19 +68,47 @@ void Motor::Init()
     targetDirection = STOP;
     defaultDirection = STOP;
 
-    minMotorSpeed = MIN_MOTOR_SPEED;
-    maxMotorSpeed = MAX_MOTOR_SPEED;
-    rampUpSpeed = RAMP_UP_SPEED;
-    rampDownSpeed = RAMP_DOWN_SPEED;
+    if (motorPosition == LEFT_TRACK)
+    {
+        minMotorSpeed = SystemParameters.leftMinSpeed;
+        maxMotorSpeed = SystemParameters.leftMaxSpeed;
+        rampUpSpeed   = SystemParameters.leftRampUp;
+        rampDownSpeed = SystemParameters.leftRampDown;
+    }
+    else if (motorPosition == RIGHT_TRACK)
+    {
+        minMotorSpeed = SystemParameters.rightMinSpeed;
+        maxMotorSpeed = SystemParameters.rightMaxSpeed;
+        rampUpSpeed   = SystemParameters.rightRampUp;
+        rampDownSpeed = SystemParameters.rightRampDown;
+    }
+    else
+    {
+        minMotorSpeed = SystemParameters.brushMinSpeed;
+        maxMotorSpeed = SystemParameters.brushMaxSpeed;
+        rampUpSpeed   = SystemParameters.brushRampUp;
+        rampDownSpeed = SystemParameters.brushRampDown;
+    }
 }
 
 void Motor::Stop()
 {
     targetSpeed = 0;
     targetDirection = defaultDirection;
+    digitalWrite(stopPin, HIGH);
+    stopped = true;
 }
 
-uint8_t Motor::IsError()
+void Motor::ResumeIfStopped(void)
+{
+    if (stopped == true)
+    {
+        digitalWrite(stopPin, HIGH);
+        stopped = false;
+    }
+}
+
+uint8_t Motor::CheckError()
 {
     return (digitalRead(errorPin));
 }
@@ -112,11 +141,16 @@ void Motor::SetTargetSpeed(uint8_t speed)
 
 void Motor::RunRampSupport()
 {
+    if (targetSpeed > maxMotorSpeed)
+    {
+        targetSpeed = maxMotorSpeed;
+    }
+    
     if (targetDirection == currentDirection)
     {
         if (targetSpeed > currentSpeed)
         {
-            currentSpeed = currentSpeed + RAMP_UP_SPEED;
+            currentSpeed = currentSpeed + rampUpSpeed;
             if (currentSpeed > targetSpeed)
             {
                 currentSpeed = targetSpeed;
@@ -125,7 +159,7 @@ void Motor::RunRampSupport()
         }
         else if (targetSpeed < currentSpeed)
         {
-            currentSpeed = currentSpeed - RAMP_DOWN_SPEED;
+            currentSpeed = currentSpeed - rampDownSpeed;
             if (currentSpeed < targetSpeed)
             {
                 currentSpeed = targetSpeed;
@@ -135,7 +169,7 @@ void Motor::RunRampSupport()
     }
     else
     {
-        currentSpeed = currentSpeed - RAMP_DOWN_SPEED;
+        currentSpeed = currentSpeed - rampDownSpeed;
         if (currentSpeed < 0)
         {
             currentSpeed = 0;

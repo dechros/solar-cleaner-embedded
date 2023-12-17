@@ -22,6 +22,6 @@
  * @return true Error is detected
  * @return false Error is not detected
  */
-bool detectDriverError(void);
+bool DetectDriverError(void);
 
 #endif

@@ -25,6 +25,6 @@
  * @return true Gap detected
  * @return false Gap is not detected
  */
-bool detectSpaces(void);
+bool DetectSensorActivity(void);
 
 #endif

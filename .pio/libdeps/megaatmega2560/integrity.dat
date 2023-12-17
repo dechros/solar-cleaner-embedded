@@ -1,4 +1,3 @@
-greygnome/EnableInterrupt@^1.1.0
-coryjfowler/mcp_can@^1.5.0
-uipethernet/UIPEthernet@^2.0.12
 feilipu/FreeRTOS
+coryjfowler/mcp_can@^1.5.0
+greygnome/EnableInterrupt@^1.1.0

@@ -13,11 +13,21 @@
 #define _GLOBALS_H_
 
 #include "motor.h"
+#include "eepromOperations.h"
+#include "waterPump.h"
 
 #define CAN_MODE 0
 
 extern Motor LeftTrackMotor;
 extern Motor RightTrackMotor;
 extern Motor BrushesMotor;
+
+extern WaterPump WaterPumpHandler;
+
+extern Parameters_t SystemParameters;
+
+void SystemStop();
+
+void SystemResume();
 
 #endif /* _GLOBALS_H_ */

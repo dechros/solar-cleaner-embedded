@@ -3,71 +3,69 @@
 
 #include <EEPROM.h>
 #include <string.h>
+#include <stdint.h>
 #include "softwareVersion.h"
 #include "pinOperations.h"
 
-#define CRC32_VALUE                             3000000
+#define CONTROL_VALUE            31
 
-#define COMPANY_NAME                            "MOONMACH"
-#define SIZE_OF_COMPANY_NAME                    8
-#define EEPROM_START_ADDRESS                    0
-#define EEPROM_END_ADDRESS                      0x0FFF
-#define EEPROM_HEADER_START_ADDRESS             EEPROM_START_ADDRESS
-#define EEPROM_COMPANY_NAME_ADDRESS             EEPROM_HEADER_START_ADDRESS
-#define EEPROM_MAJOR_VERSION_ADDRESS            EEPROM_HEADER_START_ADDRESS + SIZE_OF_COMPANY_NAME
-#define EEPROM_MINOR_VERSION_ADDRESS            EEPROM_MAJOR_VERSION_ADDRESS + 1
-#define EEPROM_PATCH_VERSION_ADDRESS            EEPROM_MINOR_VERSION_ADDRESS + 1
-#define EEPROM_DAY_ADDRESS                      EEPROM_PATCH_VERSION_ADDRESS + 1
-#define EEPROM_MONTH_ADDRESS                    EEPROM_DAY_ADDRESS + 1
-#define EEPROM_YEAR_ADDRESS                     EEPROM_MONTH_ADDRESS + 1
-#define EEPROM_ERROR_COUNT_ADDRESS              EEPROM_YEAR_ADDRESS + 1
-#define EEPROM_CRC16_ADDRESS                    EEPROM_ERROR_COUNT_ADDRESS + 2
-#define EEPROM_CRC32_ADDRESS                    EEPROM_CRC16_ADDRESS + 2
+#define LEFT_ERROR_ADDRESS             58   
+#define RIGHT_ERROR_ADDRESS            60 
+#define BRUSH_ERROR_ADDRESS            62 
+#define CONTROLLER_ERROR_ADDRESS       64 
 
-#define EEPROM_ERROR_SECTOR_START_ADDRESS       (sizeof(EepromHeader_t))
-
-extern bool CRC32ErrorFlag;
-
-typedef struct 
+typedef enum
 {
-    uint8_t errorID;
-    uint8_t errorSource;
-}Error_t;
+    LEFT_ERROR,
+    RIGHT_ERROR,
+    BRUSH_ERROR,
+    CONTROLLER_ERROR,
+    NO_ERROR
+}ErrorType_t;
 
-typedef struct 
+typedef struct
 {
-    uint8_t character[SIZE_OF_COMPANY_NAME];
-}CompanyName_t;
+    uint8_t name[50];
+}MachineName_t;
 
-typedef struct 
-{
-    uint8_t major;
-    uint8_t minor;
-    uint8_t patch;
-}Version_t;
 
-typedef struct 
+typedef struct /* 84 byte */
 {
-    uint8_t day;
-    uint8_t month;
-    uint8_t year;
-}Date_t;
-
-typedef struct __attribute__ ((packed, aligned(1)))
-{
-    CompanyName_t companyName;
-    Version_t version;
-    Date_t date;
-    uint16_t errorCount;
-    uint16_t CRC16;
-    uint32_t CRC32;
-}EepromHeader_t;
+    uint8_t controlValue;
+    uint8_t versionMajor;
+    uint8_t versionMinor;
+    uint8_t versionPatch;
+    uint8_t companyName[50];
+    uint8_t machineIP[4];
+    uint16_t leftErrorCount;
+    uint16_t rightErrorCount;
+    uint16_t brushErrorCount;
+    uint16_t controllerErrorCount;
+    uint8_t leftRampUp;
+    uint8_t leftRampDown;
+    uint8_t leftMinSpeed;
+    uint8_t leftMaxSpeed;
+    uint8_t rightRampUp;
+    uint8_t rightRampDown;
+    uint8_t rightMinSpeed;
+    uint8_t rightMaxSpeed;
+    uint8_t brushRampUp;
+    uint8_t brushRampDown;
+    uint8_t brushMinSpeed;
+    uint8_t brushMaxSpeed;
+    uint8_t joystickMiddleValue;
+    uint8_t joystickDeadZone;
+    uint8_t joystickMinValue;
+    uint8_t joystickMaxValue;
+    uint8_t potantiometerMinValue;
+    uint8_t potantiometerMaxValue;
+}Parameters_t;
 
 /**
  * @brief 
  * 
  */
-void InitializeEEPROM(void);
+void InitParameters(void);
 
 /**
  * @brief 
@@ -78,62 +76,51 @@ void ClearEEPROM(void);
 /**
  * @brief 
  * 
+ * @param error 
  */
-void ErrorHistoryClear(void);
+void LogError(ErrorType_t error);
 
 /**
  * @brief 
  * 
- * @param error 
+ * @return Parameters_t 
  */
-void LogError(Error_t error);
+Parameters_t ReadParametersFromEEPROM(void);
 
 /**
- * @brief Get the Company Name object
+ * @brief 
  * 
- * @return CompanyName_t 
+ * @param name 
  */
-CompanyName_t GetCompanyName(void);
-/**
- * @brief Get the Software Version object
- * 
- * @return Version_t 
- */
-Version_t GetSoftwareVersion(void);
+void ReadMachineNameFromEEPROM(uint8_t* name);
 
 /**
- * @brief Get the Software Update Date object
+ * @brief 
  * 
- * @return Date_t 
+ * @param parameters 
  */
-Date_t GetSoftwareUpdateDate(void);
+void WriteParametersToEEPROM(Parameters_t parameters);
 
 /**
- * @brief Get the Error Count object
+ * @brief 
  * 
+ * @param address 
  * @return uint16_t 
  */
-uint16_t GetErrorCount(void);
+uint16_t ReadErrorCountFromEEPROM(uint16_t address);
 
 /**
- * @brief Get the Error object
+ * @brief 
  * 
- * @param errorNo 
- * @return Error_t 
+ * @param address 
+ * @param count 
  */
-Error_t GetError(uint16_t errorNo);
+void WriteErrorCountToEEPROM(uint16_t address, uint16_t count);
 
 /**
- * @brief Set the CRC32 value
- *
+ * @brief Set the Default Parameters To EEPROM
+ * 
  */
-void SetCRC32(void);
-
-/**
- * @brief Get the CRC32 value
- *
- * @return uint32_t 
- */
-uint32_t GetCRC32(void);
+void SetDefaultParametersToEEPROM(void);
 
 #endif /* _EEPROM_OPERATIONS_H_ */

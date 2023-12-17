@@ -44,7 +44,7 @@
  * C2	    Digital_Input_1	        49	            Brush error
  * C3	    Digital_Input_2	        47	            Left track error
  * C4	    Digital_Input_3	        43	            Right track error
- * C5	    Digital_Input_4	        48	            _
+ * C5	    Digital_Input_4	        48	            Maintenance mode
  *
  * C7	    Analogical_Output_1     45 (PWM)	    Left track speed
  * C8	    Analogical_Output_2	    46 (PWM)	    Right track speed
@@ -103,8 +103,9 @@
 #define SENSOR_LEFT PIN_A2
 #define SENSOR_RIGHT PIN_A3
 
+#define MAINTENANCE_PIN (48)
+
 #define RESERVED_PIN_2 (2)
-#define RESERVED_PIN_48 (48)
 #define RESERVED_PIN_A8 PIN_A8
 #define RESERVED_PIN_A9 PIN_A9
 #define RESERVED_PIN_A10 PIN_A10

@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define ROUTER_SERIAL Serial
+#define ROUTER_SERIAL Serial1
 
 #define ACK_MESSAGE            		"ACK"
 #define TCP_MESSAGE_FIRST_BYTE  	'T'

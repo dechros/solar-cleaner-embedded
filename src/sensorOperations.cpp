@@ -11,7 +11,7 @@
 
 #include "sensorOperations.h"
 
-bool detectSpaces()
+bool DetectSensorActivity()
 {
     bool retVal = false;
     if (digitalRead(SENSOR_FRONT) || digitalRead(SENSOR_REAR) || digitalRead(SENSOR_LEFT) ||digitalRead(SENSOR_RIGHT))
