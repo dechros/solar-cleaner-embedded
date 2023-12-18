@@ -103,25 +103,25 @@ void SetDefaultParametersToEEPROM(void)
     }
     for (uint8_t i = 0; i < 4; i++)
     {
-        parameters.machineIP[i] = '0';
+        parameters.machineIP[i] = 0;
     }
     parameters.leftErrorCount           = 0;
     parameters.rightErrorCount          = 0;
     parameters.brushErrorCount          = 0;
     parameters.controllerErrorCount     = 0;
-    parameters.leftRampUp               = 5;
-    parameters.leftRampDown             = 5;
+    parameters.leftRampUp               = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
+    parameters.leftRampDown             = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
     parameters.leftMinSpeed             = 0;
     parameters.leftMaxSpeed             = 100;
-    parameters.rightRampUp              = 5;
-    parameters.rightRampDown            = 5;
+    parameters.rightRampUp              = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
+    parameters.rightRampDown            = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
     parameters.rightMinSpeed            = 0;
     parameters.rightMaxSpeed            = 100;
-    parameters.brushRampUp              = 5;
-    parameters.brushRampDown            = 5;
+    parameters.brushRampUp              = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
+    parameters.brushRampDown            = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
     parameters.brushMinSpeed            = 0;
     parameters.brushMaxSpeed            = 100;
-    parameters.joystickMiddleValue      = 0;    
+    parameters.joystickMiddleValue      = 127;    
     parameters.joystickDeadZone         = 0; 
     parameters.joystickMinValue         = 0; 
     parameters.joystickMaxValue         = 255; 

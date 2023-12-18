@@ -14,7 +14,7 @@
 bool DetectSensorActivity()
 {
     bool retVal = false;
-    if (digitalRead(SENSOR_FRONT) || digitalRead(SENSOR_REAR) || digitalRead(SENSOR_LEFT) ||digitalRead(SENSOR_RIGHT))
+    if (digitalRead(SENSOR_FRONT) || digitalRead(SENSOR_REAR) || digitalRead(SENSOR_LEFT) || digitalRead(SENSOR_RIGHT))
     {
         retVal = true;
     }

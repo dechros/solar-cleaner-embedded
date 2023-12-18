@@ -29,11 +29,13 @@ void RemoteStart()
 
 void CheckCANMessage()
 {
-    if (CANMessageReceived)
+    if (CANMessageReceived == true)
 	{
+		messageTimeoutCounter = 0;
+		controllerError = false;
+
 		uint8_t messageLength = 0;
 		uint32_t canMessageId = 0;
-
 		if (CAN.readMsgBuf(&canMessageId, &messageLength, CANMessage.data) == CAN_OK)
 		{
 			if (canMessageId == REMOTE_CONTROL_MESSAGE_ID_1)
@@ -115,11 +117,19 @@ void CheckCANMessage()
 					BrushesMotor.SetTargetDirection(REVERSE);
 				}
 
-				if (CANMessage.byte3.waterPumpButton == 1 && waterPumpButtonOldState == 0)
+				if (CANMessage.byte1.rcStopRelaysOpened == 1)
 				{
-					WaterPumpHandler.Request(TOGGLE); /* TODO: Will not stop at emergency because of toggle */
+					WaterPumpHandler.Request(TURN_OFF);
 				}
-				waterPumpButtonOldState = CANMessage.byte3.waterPumpButton;
+				else
+				{
+					/* TODO: Check here if water pump does not work */
+					if (CANMessage.byte3.waterPumpButton == 1 && waterPumpButtonOldState == 0)
+					{
+						WaterPumpHandler.Request(TOGGLE);
+					}
+					waterPumpButtonOldState = CANMessage.byte3.waterPumpButton;
+				}
 			}
 		}
 	}

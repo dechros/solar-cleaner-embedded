@@ -8,9 +8,11 @@
 #define GET_PARAMETERS_MESSAGE                  "GET1*"
 #define SET_PARAMETERS_MESSAGE                  "SET1*"
 
-bool CheckMaintenanceMode(void);
+uint8_t CheckMaintenanceMode(void);
 
-void SendMaintenanceModeMessage(bool mode);
+bool SendMaintenanceModeMessage(bool mode);
+
+bool ReceiveACK(void);
 
 void CheckMaintenanceMessages(void);
 

@@ -9,31 +9,48 @@
  * 
  */
 
+#include "globals.h"
 #include "errorOperations.h"
 #include "eepromOperations.h"
 
-bool DetectDriverError(void)
+bool DetectErrors(void)
 {
+    static uint8_t brushErrorOldState = LOW;
+    static uint8_t leftErrorOldState = LOW;
+    static uint8_t rightErrorOldState = LOW;
+    static bool controllerErrorOldState = false;
+
+    uint8_t brushErrorCurrentState = digitalRead(BRUSHES_ERROR_PIN);
+    uint8_t leftErrorCurrentState = digitalRead(TRACK_LEFT_ERROR_PIN);
+    uint8_t rightErrorCurrentState = digitalRead(TRACK_RIGHT_ERROR_PIN);
+    bool controllerErrorCurrentState = controllerError;
+
     bool retVal = false;
-    if (digitalRead(BRUSHES_ERROR_PIN))
+    if (brushErrorCurrentState == HIGH && brushErrorOldState == LOW)
     {
         LogError(BRUSH_ERROR);
         retVal = true;
     }
-    if (digitalRead(TRACK_LEFT_ERROR_PIN))
+    if (leftErrorCurrentState == HIGH && leftErrorOldState == LOW)
     {
         LogError(LEFT_ERROR);
         retVal = true;
     }
-    if (digitalRead(TRACK_RIGHT_ERROR_PIN))
+    if (rightErrorCurrentState == HIGH && rightErrorOldState == LOW)
     {
         LogError(RIGHT_ERROR);
         retVal = true;
     }
-    if (false) /* TODO: Log error for controller */
+    if (controllerErrorCurrentState == true && controllerErrorOldState == false)
     {
         LogError(CONTROLLER_ERROR);
         retVal = true;
     }
+
+    brushErrorOldState = brushErrorCurrentState;
+    leftErrorOldState = leftErrorCurrentState;
+    rightErrorOldState = rightErrorCurrentState;
+    controllerErrorOldState = controllerErrorCurrentState;
+
     return retVal;
 }

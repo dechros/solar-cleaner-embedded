@@ -16,12 +16,11 @@
 #include "pinDefinitions.h"
 
 /**
- * @brief Detects driver errors vis error output pin coming
- * from drivers.
+ * @brief Detects errors
  * 
  * @return true Error is detected
  * @return false Error is not detected
  */
-bool DetectDriverError(void);
+bool DetectErrors(void);
 
 #endif

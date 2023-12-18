@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include "timerOperations.h"
+#include "globals.h"
 
 bool updateMotorsParameters = false;
 bool sendRemoteStartMessage = false;
-bool checkMessageTimeoutFlag = false;
 
 uint8_t remoteStartCounter = 0;
 
@@ -25,10 +25,16 @@ ISR(TIMER1_COMPA_vect)
 {
 	updateMotorsParameters = true;
     remoteStartCounter++;
+	messageTimeoutCounter++;
     if (remoteStartCounter == 20) /* 1 sec */
     {
         sendRemoteStartMessage = true;
-		checkMessageTimeoutFlag = true;
         remoteStartCounter = 0;
     }
+
+	if (messageTimeoutCounter == 20)
+	{
+		controllerError = true;
+		messageTimeoutCounter = 0;
+	}
 }

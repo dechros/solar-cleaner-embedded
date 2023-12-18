@@ -8,17 +8,13 @@ WaterPump WaterPumpHandler;
 
 Parameters_t SystemParameters;
 
+uint8_t messageTimeoutCounter = 0;
+bool controllerError = false;
+
 void SystemStop()
 {
     LeftTrackMotor.Stop();
     RightTrackMotor.Stop();
     BrushesMotor.Stop();
     WaterPumpHandler.Request(TURN_OFF);
-}
-
-void SystemResume()
-{
-    LeftTrackMotor.ResumeIfStopped();
-    RightTrackMotor.ResumeIfStopped();
-    BrushesMotor.ResumeIfStopped();
 }

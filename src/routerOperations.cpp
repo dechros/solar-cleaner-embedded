@@ -3,7 +3,6 @@
 #include "waterPump.h"
 
 uint8_t bufferClearCounter = 0;
-bool messageCameFlag = false;
 
 typedef struct
 {
@@ -33,14 +32,15 @@ static bool ControlChecksum(uint8_t *dataPointer, uint8_t size)
 
 static void ParseTCPMessage(TCPMessage_t readTCPMessage)
 {
-    messageCameFlag = true;
+    messageTimeoutCounter = 0;
+    controllerError = false;
+    
     if (readTCPMessage.emergencyButton == 0)
     {
         SystemStop();
     }
     else
     {
-        SystemResume();
         TrackInfo_t trackInfo = JoystickAlgorithm(readTCPMessage.joystickX, readTCPMessage.joystickY);
         RightTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.rightTrackSpeed / 3) * ((double)readTCPMessage.brushSpeed / MAX_SPEED)));
         RightTrackMotor.SetTargetDirection(trackInfo.rightTrackDirection);
@@ -114,16 +114,6 @@ void CheckTCPMessage()
             /* Unknown header byte discard */
         }
     }
-}
-
-void CheckMessageTimeout()
-{
-    /* No message came in 1 sec */
-    if (messageCameFlag == false)
-    {
-        SystemStop();
-    }
-    messageCameFlag = false;
 }
 
 TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)

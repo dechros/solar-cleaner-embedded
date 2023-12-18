@@ -5,15 +5,45 @@
 
 bool maintenanceActive = false;
 
-bool CheckMaintenanceMode(void)
+uint8_t CheckMaintenanceMode(void)
 {
-    if (digitalRead(MAINTENANCE_PIN) == HIGH)
+    return digitalRead(MAINTENANCE_PIN);  
+}
+
+bool SendMaintenanceModeMessage(bool mode)
+{
+    if (mode == true)
     {
-        SendMaintenanceModeMessage(true);
-        return true;
+        ROUTER_SERIAL.write(MAINTENANCE_MODE_ACTIVE_MESSAGE, 4);
     }
-    SendMaintenanceModeMessage(false);
-    return false;  
+    else
+    {
+        ROUTER_SERIAL.write(MAINTENANCE_MODE_DEACTIVE_MESSAGE, 4);
+    }
+    return ReceiveACK();
+}
+
+bool ReceiveACK()
+{
+    bool returnVal = false;
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        if (ROUTER_SERIAL.available() < 3)
+        {
+            delay(10);
+        }
+        else
+        {
+            uint8_t message[3] = {0};
+            ROUTER_SERIAL.readBytes(message, 3);
+            if (strncmp((const char*)message, ACK_MESSAGE, 3) == 0)
+            {
+                returnVal = true;
+                break;
+            }
+        }
+    }
+    return returnVal;
 }
 
 void CheckMaintenanceMessages(void)
@@ -29,17 +59,5 @@ void CheckMaintenanceMessages(void)
                 /*WWW*/
             }
         }
-    }
-}
-
-void SendMaintenanceModeMessage(bool mode)
-{
-    if (mode == true)
-    {
-        ROUTER_SERIAL.write(MAINTENANCE_MODE_ACTIVE_MESSAGE, 4);
-    }
-    else
-    {
-        ROUTER_SERIAL.write(MAINTENANCE_MODE_DEACTIVE_MESSAGE, 4);
     }
 }

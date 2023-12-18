@@ -40,13 +40,11 @@ public:
     Motor(MotorPosition_t position);
     void Init(void);
     void Stop(void);
-    void ResumeIfStopped(void);
     uint8_t CheckError(void);
     void SetTargetDirection(MotorDirectionType_t direction);
     void SetTargetSpeed(uint8_t speed);
     void RunRampSupport(void);
-    bool GetStopped(void);
-    void SetStopped(bool);
+    void UpdateMotorParameters(void);
 
 private:
     MotorPosition_t motorPosition;

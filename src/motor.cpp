@@ -95,17 +95,6 @@ void Motor::Stop()
 {
     targetSpeed = 0;
     targetDirection = defaultDirection;
-    digitalWrite(stopPin, HIGH);
-    stopped = true;
-}
-
-void Motor::ResumeIfStopped(void)
-{
-    if (stopped == true)
-    {
-        digitalWrite(stopPin, HIGH);
-        stopped = false;
-    }
 }
 
 uint8_t Motor::CheckError()
@@ -197,5 +186,30 @@ void Motor::RunRampSupport()
             }
             currentDirection = targetDirection;
         }
+    }
+}
+
+void Motor::UpdateMotorParameters(void)
+{
+    if (motorPosition == LEFT_TRACK)
+    {
+        minMotorSpeed = SystemParameters.leftMinSpeed;
+        maxMotorSpeed = SystemParameters.leftMaxSpeed;
+        rampUpSpeed   = SystemParameters.leftRampUp;
+        rampDownSpeed = SystemParameters.leftRampDown;
+    }
+    else if (motorPosition == RIGHT_TRACK)
+    {
+        minMotorSpeed = SystemParameters.rightMinSpeed;
+        maxMotorSpeed = SystemParameters.rightMaxSpeed;
+        rampUpSpeed   = SystemParameters.rightRampUp;
+        rampDownSpeed = SystemParameters.rightRampDown;
+    }
+    else
+    {
+        minMotorSpeed = SystemParameters.brushMinSpeed;
+        maxMotorSpeed = SystemParameters.brushMaxSpeed;
+        rampUpSpeed   = SystemParameters.brushRampUp;
+        rampDownSpeed = SystemParameters.brushRampDown;
     }
 }

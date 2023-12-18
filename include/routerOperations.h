@@ -15,7 +15,7 @@
 
 void InitRouterCommunication(void);
 void CheckTCPMessage(void);
-void CheckMessageTimeout(void);
+
 
 typedef struct
 {

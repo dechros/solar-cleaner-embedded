@@ -47,10 +47,17 @@ void loop()
 {
 	if (CheckMaintenanceMode() == true)
 	{
-		delay(250);
-		while (CheckMaintenanceMode() == true)
+        if (SendMaintenanceModeMessage(true) == true)
 		{
-			CheckMaintenanceMessages();
+			while (CheckMaintenanceMode() == true)
+			{
+				CheckMaintenanceMessages();
+			}
+		}
+		else
+		{
+			Serial.println("ACK did not came!");
+			delay(1000);
 		}
 	}
 	
@@ -63,22 +70,14 @@ void loop()
 	}
 #else
 	CheckTCPMessage();
-	if (checkMessageTimeoutFlag == true)
-	{
-		CheckMessageTimeout();
-		checkMessageTimeoutFlag = false;
-	}
 #endif
+
 	if (updateMotorsParameters == true)
 	{
-		if (DetectDriverError() == true ||
+		if (DetectErrors() == true ||
 			DetectSensorActivity() == true)
 		{
 			SystemStop();
-		}
-		else
-		{
-			SystemResume();
 		}
 		
 		WaterPumpHandler.ProcessRequests();
