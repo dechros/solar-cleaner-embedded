@@ -2,35 +2,52 @@
 #include "maintenanceOperations.h"
 #include "routerOperations.h"
 #include "pinDefinitions.h"
+#include "eepromOperations.h"
+#include "globals.h"
 
-bool maintenanceActive = false;
+static bool maintenanceActive = false;
 
-uint8_t CheckMaintenanceMode(void)
+static void ClearMessageBuffer(void);
+static bool ReceiveACK(void);
+
+bool IsRouterMaintenanceActive(void)
+{
+    return maintenanceActive;
+}
+
+uint8_t CheckMaintenancePin(void)
 {
     return digitalRead(MAINTENANCE_PIN);  
 }
 
-bool SendMaintenanceModeMessage(bool mode)
+void ActivateRouterMaintenanceMode(void)
 {
-    if (mode == true)
+    ClearMessageBuffer();
+    ROUTER_SERIAL.write(MAINTENANCE_MODE_ACTIVE_MESSAGE, 4);
+    if (ReceiveACK() == true)
     {
-        ROUTER_SERIAL.write(MAINTENANCE_MODE_ACTIVE_MESSAGE, 4);
+        maintenanceActive = true;
     }
-    else
-    {
-        ROUTER_SERIAL.write(MAINTENANCE_MODE_DEACTIVE_MESSAGE, 4);
-    }
-    return ReceiveACK();
 }
 
-bool ReceiveACK()
+void DeactivateRouterMaintenanceMode(void)
+{
+    ROUTER_SERIAL.write(MAINTENANCE_MODE_DEACTIVE_MESSAGE, 4);
+    if (ReceiveACK() == true)
+    {
+        maintenanceActive = false;
+    }
+}
+
+
+static bool ReceiveACK()
 {
     bool returnVal = false;
-    for (uint8_t i = 0; i < 5; i++)
+    for (uint16_t i = 0; i < MESSAGE_TIMEOUT_MS; i++)
     {
         if (ROUTER_SERIAL.available() < 3)
         {
-            delay(10);
+            delay(1);
         }
         else
         {
@@ -48,7 +65,7 @@ bool ReceiveACK()
 
 void CheckMaintenanceMessages(void)
 {
-    if(ROUTER_SERIAL.available() > 0)
+    if(ROUTER_SERIAL.available() >= 5)
     {
         if (ROUTER_SERIAL.peek() == 'G' && ROUTER_SERIAL.available() >= 5)
         {
@@ -56,8 +73,85 @@ void CheckMaintenanceMessages(void)
             ROUTER_SERIAL.readBytes(message, 5);
             if (strncmp((const char*)message, GET_MACHINE_NAME_MESSAGE, 5) == 0)
             {
-                /*WWW*/
+                uint8_t name[50] = {0};
+                ReadMachineNameFromEEPROM(name);
+                ROUTER_SERIAL.write(name, 50);
+            }
+            else if (strncmp((const char*)message, GET_PARAMETERS_MESSAGE, 5) == 0)
+            {
+                Parameters_t parameters = ReadParametersFromEEPROM();
+                ROUTER_SERIAL.write((uint8_t*)&parameters, sizeof(Parameters_t));
+            }            
+        }
+        else if (ROUTER_SERIAL.peek() == 'S' && ROUTER_SERIAL.available() >= 5)
+        {
+            uint8_t message[5] = {0};
+            ROUTER_SERIAL.readBytes(message, 5);
+            if (strncmp((const char*)message, SET_PARAMETERS_MESSAGE, 5) == 0)
+            {
+                bool timeout = true;
+                for (uint16_t i = 0; i < MESSAGE_TIMEOUT_MS; i++)
+                {
+                    if (ROUTER_SERIAL.available() < sizeof(Parameters_t))
+                    {
+                        delay(1);
+                    }
+                    else
+                    {
+                        timeout = false;
+                        Parameters_t newParameters;
+                        ROUTER_SERIAL.readBytes((char*)&newParameters, sizeof(Parameters_t));
+                        WriteParametersToEEPROM(newParameters);
+                        SystemParameters = ReadParametersFromEEPROM();
+                        LeftTrackMotor.UpdateMotorParameters();
+                        RightTrackMotor.UpdateMotorParameters();
+                        BrushesMotor.UpdateMotorParameters();
+                        Serial.println("Parameters Set!");
+                        break;
+                    }
+                }
+                if (timeout == true)
+                {
+                    ClearMessageBuffer();
+                }
             }
         }
+        else if ((ROUTER_SERIAL.peek() == 'G' || ROUTER_SERIAL.peek() == 'S') &&
+                  ROUTER_SERIAL.available() < 5)
+        {
+            static uint8_t missingMessageDiscardCount = 0;
+            delay(1);
+            missingMessageDiscardCount++;
+            if (missingMessageDiscardCount == 100)
+            {
+                Serial.println("Missing Message Discarded");
+                ClearMessageBuffer();
+            }
+            
+        }
+        else
+        {
+            Serial.println("Discard One Byte");
+            ROUTER_SERIAL.read();
+        }
+    }
+    else if(ROUTER_SERIAL.available() < 5 && ROUTER_SERIAL.available() > 0)
+    {
+        static uint8_t missingMessageDiscardCount = 0;
+        delay(1);
+        missingMessageDiscardCount++;
+        if (missingMessageDiscardCount == 100)
+        {
+            Serial.println("Half Message Cleared");
+            ClearMessageBuffer();
+        }
+    }
+}
+
+static void ClearMessageBuffer()
+{
+    for (uint16_t i = 0; i < ROUTER_SERIAL.available(); i++)
+    {
+        ROUTER_SERIAL.read();
     }
 }

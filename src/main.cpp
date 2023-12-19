@@ -20,16 +20,8 @@
 
 void setup()
 {
-	Serial.begin(9600);
 	InitPins();
 	InitParameters();
-	uint8_t name[50];
-	ReadMachineNameFromEEPROM(name);
-	for (uint8_t i = 0; i < 50; i++)
-    {
-        Serial.println(name[i]);
-    }
-	//PrintParameters();
 	WaterPumpHandler.Init();
 	LeftTrackMotor.Init();
 	RightTrackMotor.Init();
@@ -45,22 +37,7 @@ void setup()
 
 void loop()
 {
-	if (CheckMaintenanceMode() == true)
-	{
-        if (SendMaintenanceModeMessage(true) == true)
-		{
-			while (CheckMaintenanceMode() == true)
-			{
-				CheckMaintenanceMessages();
-			}
-		}
-		else
-		{
-			Serial.println("ACK did not came!");
-			delay(1000);
-		}
-	}
-	
+#if 1
 #if CAN_MODE
 	CheckCANMessage();
 	if (sendRemoteStartMessage == true)
@@ -69,13 +46,20 @@ void loop()
 		sendRemoteStartMessage = false;
 	}
 #else
+/** 
+ * Must not check TCP messages while:
+ *  	- Maintenance Pin is HIGH 
+ *  	- Router Maintenance is active
+ */
+if (CheckMaintenancePin() == LOW && IsRouterMaintenanceActive() == false) 
+{
 	CheckTCPMessage();
+}
 #endif
 
 	if (updateMotorsParameters == true)
 	{
-		if (DetectErrors() == true ||
-			DetectSensorActivity() == true)
+		if (DetectErrors() == true || DetectSensorActivity() == true || CheckMaintenancePin() == HIGH)
 		{
 			SystemStop();
 		}
@@ -86,6 +70,26 @@ void loop()
 		BrushesMotor.RunRampSupport();
 		updateMotorsParameters = false;
 	}
+
+	if (CheckMaintenancePin() == HIGH)
+	{
+		if (IsRouterMaintenanceActive() == false)
+		{
+			ActivateRouterMaintenanceMode();
+		}
+		else
+		{
+			CheckMaintenanceMessages();
+		}
+	}
+	else
+	{
+		if (IsRouterMaintenanceActive() == true)
+		{
+			DeactivateRouterMaintenanceMode();
+		}
+	}
+#endif
 }
 
 void PrintParameters()

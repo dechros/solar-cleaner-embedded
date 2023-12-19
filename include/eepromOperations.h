@@ -7,7 +7,7 @@
 #include "softwareVersion.h"
 #include "pinOperations.h"
 
-#define CONTROL_VALUE            31
+#define CONTROL_VALUE                  31
 
 #define LEFT_ERROR_ADDRESS             58   
 #define RIGHT_ERROR_ADDRESS            60 
