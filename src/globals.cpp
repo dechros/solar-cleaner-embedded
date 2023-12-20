@@ -10,6 +10,7 @@ Parameters_t SystemParameters;
 
 uint8_t messageTimeoutCounter = 0;
 bool controllerError = false;
+bool firstMessageCame = false;
 
 void SystemStop()
 {

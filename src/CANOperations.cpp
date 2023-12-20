@@ -31,6 +31,7 @@ void CheckCANMessage()
 {
     if (CANMessageReceived == true)
 	{
+		firstMessageCame = true;
 		messageTimeoutCounter = 0;
 		controllerError = false;
 
@@ -63,7 +64,7 @@ void CheckCANMessage()
 				previousRampUpValue = CANMessage.byte3.speedButton1;
 				previousRampDownValue = CANMessage.byte3.speedButton2;
 				
-				if (CANMessage.byte8.paddleDValue > JOYSTICK_DEAD_ZONE_CAN_REMOTE)
+				if (CANMessage.byte8.paddleDValue > SystemParameters.joystickDeadZone)
 				{
 					RightTrackMotor.SetTargetSpeed((uint8_t)((CANMessage.byte8.paddleDValue / 3) * ((double)RPM_SPEED / RPM_MAX_SPEED)));
 				}
@@ -81,7 +82,7 @@ void CheckCANMessage()
 					RightTrackMotor.SetTargetDirection(FORWARD);
 				}
 
-				if (CANMessage.byte5.paddleAValue > JOYSTICK_DEAD_ZONE_CAN_REMOTE)
+				if (CANMessage.byte5.paddleAValue > SystemParameters.joystickDeadZone)
 				{
 					LeftTrackMotor.SetTargetSpeed((uint8_t)((CANMessage.byte5.paddleAValue / 3) * ((double)RPM_SPEED / RPM_MAX_SPEED)));
 				}
@@ -99,7 +100,7 @@ void CheckCANMessage()
 					LeftTrackMotor.SetTargetDirection(REVERSE);
 				}
 
-				if (CANMessage.byte7.potantiometerValue > JOYSTICK_DEAD_ZONE_CAN_REMOTE)
+				if (CANMessage.byte7.potantiometerValue > SystemParameters.joystickDeadZone)
 				{
 					BrushesMotor.SetTargetSpeed(CANMessage.byte7.potantiometerValue);
 				}

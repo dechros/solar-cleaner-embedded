@@ -34,6 +34,7 @@ static void ParseTCPMessage(TCPMessage_t readTCPMessage)
 {
     messageTimeoutCounter = 0;
     controllerError = false;
+    firstMessageCame = true;
     
     if (readTCPMessage.emergencyButton == 0)
     {
@@ -42,11 +43,11 @@ static void ParseTCPMessage(TCPMessage_t readTCPMessage)
     else
     {
         TrackInfo_t trackInfo = JoystickAlgorithm(readTCPMessage.joystickX, readTCPMessage.joystickY);
-        RightTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.rightTrackSpeed / 3) * ((double)readTCPMessage.brushSpeed / MAX_SPEED)));
+        RightTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.rightTrackSpeed / 3) * ((double)readTCPMessage.driveSpeed / SystemParameters.potantiometerMaxValue)));
         RightTrackMotor.SetTargetDirection(trackInfo.rightTrackDirection);
-        LeftTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.leftTrackSpeed / 3) * ((double)readTCPMessage.brushSpeed / MAX_SPEED)));
+        LeftTrackMotor.SetTargetSpeed((uint8_t)((trackInfo.leftTrackSpeed / 3) * ((double)readTCPMessage.driveSpeed / SystemParameters.potantiometerMaxValue)));
         LeftTrackMotor.SetTargetDirection(trackInfo.leftTrackDirection);
-        BrushesMotor.SetTargetSpeed(readTCPMessage.driveSpeed);
+        BrushesMotor.SetTargetSpeed(readTCPMessage.brushSpeed);
         if (readTCPMessage.brushFrontCW == 1)
         {
             BrushesMotor.SetTargetDirection(FORWARD);
@@ -73,7 +74,7 @@ void CheckTCPMessage()
     {
         bufferClearCounter = 0;
         int readData = ROUTER_SERIAL.peek();
-        if (readData == TCP_MESSAGE_FIRST_BYTE && tcpBufferSize >= sizeof(TCPMessage_t))
+        if (readData == TCP_MESSAGE_FIRST_BYTE && tcpBufferSize >= (int)sizeof(TCPMessage_t))
         {
             TCPMessage_t readTCPMessage;
             ROUTER_SERIAL.readBytes((uint8_t*)&readTCPMessage, sizeof(TCPMessage_t));
@@ -97,7 +98,7 @@ void CheckTCPMessage()
                 /* Unknown header */
             }
         }
-        else if (readData == 'T' && tcpBufferSize < sizeof(TCPMessage_t))
+        else if (readData == 'T' && tcpBufferSize < (int)sizeof(TCPMessage_t))
         {
             delay(10);
             bufferClearCounter++;

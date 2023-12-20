@@ -16,7 +16,6 @@
 void InitRouterCommunication(void);
 void CheckTCPMessage(void);
 
-
 typedef struct
 {
 	uint8_t headerT;
@@ -24,8 +23,8 @@ typedef struct
 	uint8_t headerP;
 	uint8_t joystickX;
 	uint8_t joystickY;
-    uint8_t driveSpeed;
     uint8_t brushSpeed;
+	uint8_t driveSpeed;
 	union
 	{
 		uint8_t buttons;

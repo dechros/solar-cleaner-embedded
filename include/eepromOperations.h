@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "softwareVersion.h"
 #include "pinOperations.h"
+#include "machineName.h"
 
 #define CONTROL_VALUE                  31
 
@@ -25,40 +26,43 @@ typedef enum
 
 typedef struct
 {
-    uint8_t name[50];
+    uint8_t name[MACHINE_NAME_SIZE];
 }MachineName_t;
 
-
-typedef struct /* 84 byte */
+typedef union /* 84 byte */
 {
-    uint8_t controlValue;
-    uint8_t versionMajor;
-    uint8_t versionMinor;
-    uint8_t versionPatch;
-    uint8_t companyName[50];
-    uint8_t machineIP[4];
-    uint16_t leftErrorCount;
-    uint16_t rightErrorCount;
-    uint16_t brushErrorCount;
-    uint16_t controllerErrorCount;
-    uint8_t leftRampUp;
-    uint8_t leftRampDown;
-    uint8_t leftMinSpeed;
-    uint8_t leftMaxSpeed;
-    uint8_t rightRampUp;
-    uint8_t rightRampDown;
-    uint8_t rightMinSpeed;
-    uint8_t rightMaxSpeed;
-    uint8_t brushRampUp;
-    uint8_t brushRampDown;
-    uint8_t brushMinSpeed;
-    uint8_t brushMaxSpeed;
-    uint8_t joystickMiddleValue;
-    uint8_t joystickDeadZone;
-    uint8_t joystickMinValue;
-    uint8_t joystickMaxValue;
-    uint8_t potantiometerMinValue;
-    uint8_t potantiometerMaxValue;
+    uint8_t data[84];
+    struct
+    {
+        uint8_t controlValue;
+        uint8_t versionMajor;
+        uint8_t versionMinor;
+        uint8_t versionPatch;
+        uint8_t companyName[MACHINE_NAME_SIZE];
+        uint8_t machineIP[4];
+        uint16_t leftErrorCount;
+        uint16_t rightErrorCount;
+        uint16_t brushErrorCount;
+        uint16_t controllerErrorCount;
+        uint8_t leftRampUp;
+        uint8_t leftRampDown;
+        uint8_t leftMinSpeed;
+        uint8_t leftMaxSpeed;
+        uint8_t rightRampUp;
+        uint8_t rightRampDown;
+        uint8_t rightMinSpeed;
+        uint8_t rightMaxSpeed;
+        uint8_t brushRampUp;
+        uint8_t brushRampDown;
+        uint8_t brushMinSpeed;
+        uint8_t brushMaxSpeed;
+        uint8_t joystickMiddleValue;
+        uint8_t joystickDeadZone;
+        uint8_t joystickMinValue;
+        uint8_t joystickMaxValue;
+        uint8_t potantiometerMinValue;
+        uint8_t potantiometerMaxValue;
+    };
 }Parameters_t;
 
 /**

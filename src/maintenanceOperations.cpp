@@ -73,9 +73,9 @@ void CheckMaintenanceMessages(void)
             ROUTER_SERIAL.readBytes(message, 5);
             if (strncmp((const char*)message, GET_MACHINE_NAME_MESSAGE, 5) == 0)
             {
-                uint8_t name[50] = {0};
+                uint8_t name[MACHINE_NAME_SIZE] = {0};
                 ReadMachineNameFromEEPROM(name);
-                ROUTER_SERIAL.write(name, 50);
+                ROUTER_SERIAL.write(name, MACHINE_NAME_SIZE);
             }
             else if (strncmp((const char*)message, GET_PARAMETERS_MESSAGE, 5) == 0)
             {
@@ -90,25 +90,37 @@ void CheckMaintenanceMessages(void)
             if (strncmp((const char*)message, SET_PARAMETERS_MESSAGE, 5) == 0)
             {
                 bool timeout = true;
-                for (uint16_t i = 0; i < MESSAGE_TIMEOUT_MS; i++)
+                uint8_t offsetIndex = 0;
+                uint8_t messageCount = 0;
+                Parameters_t newParameters;
+                for (uint16_t i = 0; i < 1000; i++)
                 {
-                    if (ROUTER_SERIAL.available() < sizeof(Parameters_t))
+                    uint8_t size = ROUTER_SERIAL.available();
+                    if (size > 0)
                     {
-                        delay(1);
+                        for (uint8_t i = 0; i < size; i++)
+                        {
+                            newParameters.data[i + offsetIndex] = ROUTER_SERIAL.read();
+                            messageCount++;
+                            if (messageCount == sizeof(Parameters_t))
+                            {
+                                break;
+                            }
+                        }
+                        offsetIndex += size;
                     }
-                    else
+                    if (messageCount == sizeof(Parameters_t))
                     {
                         timeout = false;
-                        Parameters_t newParameters;
-                        ROUTER_SERIAL.readBytes((char*)&newParameters, sizeof(Parameters_t));
                         WriteParametersToEEPROM(newParameters);
                         SystemParameters = ReadParametersFromEEPROM();
                         LeftTrackMotor.UpdateMotorParameters();
                         RightTrackMotor.UpdateMotorParameters();
                         BrushesMotor.UpdateMotorParameters();
-                        Serial.println("Parameters Set!");
+                        ROUTER_SERIAL.write(ACK_MESSAGE, 3);
                         break;
                     }
+                    delay(1);
                 }
                 if (timeout == true)
                 {
@@ -150,7 +162,7 @@ void CheckMaintenanceMessages(void)
 
 static void ClearMessageBuffer()
 {
-    for (uint16_t i = 0; i < ROUTER_SERIAL.available(); i++)
+    for (uint16_t i = 0; i < (uint16_t)ROUTER_SERIAL.available(); i++)
     {
         ROUTER_SERIAL.read();
     }

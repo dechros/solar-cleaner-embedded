@@ -75,6 +75,10 @@ void ReadMachineNameFromEEPROM(uint8_t* name)
 
 void WriteParametersToEEPROM(Parameters_t parameters)
 {
+    parameters.controlValue = CONTROL_VALUE;
+    parameters.versionMajor = SOFTWARE_VERSION_MAJOR;
+    parameters.versionMinor = SOFTWARE_VERSION_MINOR;
+    parameters.versionPatch = SOFTWARE_VERSION_PATCH;
     EEPROM.put(0, parameters);
 }
 
@@ -97,9 +101,9 @@ void SetDefaultParametersToEEPROM(void)
     parameters.versionMajor = SOFTWARE_VERSION_MAJOR;
     parameters.versionMinor = SOFTWARE_VERSION_MINOR;
     parameters.versionPatch = SOFTWARE_VERSION_PATCH;
-    for (uint8_t i = 0; i < 50; i++)
+    for (uint8_t i = 0; i < MACHINE_NAME_SIZE; i++)
     {
-        parameters.companyName[i] = '*';
+        parameters.companyName[i] = MACHINE_NAME[i];
     }
     for (uint8_t i = 0; i < 4; i++)
     {

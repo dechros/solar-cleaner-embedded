@@ -18,6 +18,8 @@
 #define ACCELERATION_SENSOR_FILTER  (5)
 #define ERROR_CHECK_INTERVAL 		(5)
 
+void PrintParameters();
+
 void setup()
 {
 	InitPins();
@@ -33,11 +35,12 @@ void setup()
 #else
 	InitRouterCommunication();
 #endif
+
+	PrintParameters();
 }
 
 void loop()
 {
-#if 1
 #if CAN_MODE
 	CheckCANMessage();
 	if (sendRemoteStartMessage == true)
@@ -46,11 +49,6 @@ void loop()
 		sendRemoteStartMessage = false;
 	}
 #else
-/** 
- * Must not check TCP messages while:
- *  	- Maintenance Pin is HIGH 
- *  	- Router Maintenance is active
- */
 if (CheckMaintenancePin() == LOW && IsRouterMaintenanceActive() == false) 
 {
 	CheckTCPMessage();
@@ -89,7 +87,6 @@ if (CheckMaintenancePin() == LOW && IsRouterMaintenanceActive() == false)
 			DeactivateRouterMaintenanceMode();
 		}
 	}
-#endif
 }
 
 void PrintParameters()
@@ -98,7 +95,7 @@ void PrintParameters()
     Serial.println(SystemParameters.versionMajor);
     Serial.println(SystemParameters.versionMinor);
     Serial.println(SystemParameters.versionPatch);
-    for (uint8_t i = 0; i < 50; i++)
+    for (uint8_t i = 0; i < MACHINE_NAME_SIZE; i++)
     {
         Serial.println(SystemParameters.companyName[i]);
     }

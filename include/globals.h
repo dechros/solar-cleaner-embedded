@@ -20,6 +20,7 @@
 
 extern bool controllerError;
 extern uint8_t messageTimeoutCounter;
+extern bool firstMessageCame;
 
 extern Motor LeftTrackMotor;
 extern Motor RightTrackMotor;

@@ -34,7 +34,10 @@ ISR(TIMER1_COMPA_vect)
 
 	if (messageTimeoutCounter == 20)
 	{
-		controllerError = true;
+		if (firstMessageCame == true)
+		{
+			controllerError = true;
+		}
 		messageTimeoutCounter = 0;
 	}
 }
