@@ -130,9 +130,11 @@ void Motor::SetTargetSpeed(uint8_t speed)
 
 void Motor::RunRampSupport()
 {
-    if (targetSpeed > maxMotorSpeed)
+    /* Check for max speed */
+    uint8_t value = map(targetSpeed, 0, 255, 0, 100);
+    if (value > maxMotorSpeed)
     {
-        targetSpeed = maxMotorSpeed;
+        targetSpeed = map(maxMotorSpeed, 0, 100, 0, 255);
     }
     
     if (targetDirection == currentDirection)

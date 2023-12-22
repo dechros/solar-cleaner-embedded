@@ -15,11 +15,6 @@
 #include <Arduino.h>
 #include "pinDefinitions.h"
 
-#define MIN_MOTOR_SPEED			(3)
-#define MAX_MOTOR_SPEED			(85)
-#define RAMP_UP_SPEED           (5)
-#define RAMP_DOWN_SPEED         (5)
-
 typedef enum
 {
     LEFT_TRACK,
