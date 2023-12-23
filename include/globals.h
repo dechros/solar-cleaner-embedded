@@ -16,7 +16,7 @@
 #include "eepromOperations.h"
 #include "waterPump.h"
 
-#define CAN_MODE 0
+#define CAN_MODE 1
 
 extern bool controllerError;
 extern uint8_t messageTimeoutCounter;

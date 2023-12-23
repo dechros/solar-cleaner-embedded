@@ -7,16 +7,16 @@
 #include "errorOperations.h"
 #include "maintenanceOperations.h"
 #include "sensorOperations.h"
+#include "CANOperations.h"
 
 #if CAN_MODE
-#include "CANOperations.h"
 #else
 #include "routerOperations.h"
 #endif
 
-#define GSM_UPDATE_INTERVAL  		(100)
-#define ACCELERATION_SENSOR_FILTER  (5)
-#define ERROR_CHECK_INTERVAL 		(5)
+#define GSM_UPDATE_INTERVAL (100)
+#define ACCELERATION_SENSOR_FILTER (5)
+#define ERROR_CHECK_INTERVAL (5)
 
 void PrintParameters();
 
@@ -29,9 +29,9 @@ void setup()
 	RightTrackMotor.Init();
 	BrushesMotor.Init();
 	InitTimer();
+	InitCANBus();
 
 #if CAN_MODE
-	InitCANBus();
 #else
 	InitRouterCommunication();
 #endif
@@ -49,10 +49,10 @@ void loop()
 		sendRemoteStartMessage = false;
 	}
 #else
-if (CheckMaintenancePin() == LOW && IsRouterMaintenanceActive() == false) 
-{
-	CheckTCPMessage();
-}
+	if (CheckMaintenancePin() == LOW && IsRouterMaintenanceActive() == false)
+	{
+		CheckTCPMessage();
+	}
 #endif
 
 	if (updateMotorsParameters == true)
@@ -66,6 +66,7 @@ if (CheckMaintenancePin() == LOW && IsRouterMaintenanceActive() == false)
 		LeftTrackMotor.RunRampSupport();
 		RightTrackMotor.RunRampSupport();
 		BrushesMotor.RunRampSupport();
+		UpdateCANAnalogModule();
 		updateMotorsParameters = false;
 	}
 
@@ -92,37 +93,37 @@ if (CheckMaintenancePin() == LOW && IsRouterMaintenanceActive() == false)
 void PrintParameters()
 {
 	Serial.println(SystemParameters.controlValue);
-    Serial.println(SystemParameters.versionMajor);
-    Serial.println(SystemParameters.versionMinor);
-    Serial.println(SystemParameters.versionPatch);
-    for (uint8_t i = 0; i < MACHINE_NAME_SIZE; i++)
-    {
-        Serial.println(SystemParameters.companyName[i]);
-    }
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        Serial.println(SystemParameters.machineIP[i]);
-    }
-    Serial.println(SystemParameters.leftErrorCount        );
-    Serial.println(SystemParameters.rightErrorCount       );
-    Serial.println(SystemParameters.brushErrorCount       );
-    Serial.println(SystemParameters.controllerErrorCount  );
-    Serial.println(SystemParameters.leftRampUp            );
-    Serial.println(SystemParameters.leftRampDown          );
-    Serial.println(SystemParameters.leftMinSpeed          );
-    Serial.println(SystemParameters.leftMaxSpeed          );
-    Serial.println(SystemParameters.rightRampUp           );
-    Serial.println(SystemParameters.rightRampDown         );
-    Serial.println(SystemParameters.rightMinSpeed         );
-    Serial.println(SystemParameters.rightMaxSpeed         );
-    Serial.println(SystemParameters.brushRampUp           );
-    Serial.println(SystemParameters.brushRampDown         );
-    Serial.println(SystemParameters.brushMinSpeed         );
-    Serial.println(SystemParameters.brushMaxSpeed         );
-    Serial.println(SystemParameters.joystickMiddleValue   );  
-    Serial.println(SystemParameters.joystickDeadZone      );
-    Serial.println(SystemParameters.joystickMinValue      );
-    Serial.println(SystemParameters.joystickMaxValue      ); 
-    Serial.println(SystemParameters.potantiometerMinValue );      
-    Serial.println(SystemParameters.potantiometerMaxValue ); 
+	Serial.println(SystemParameters.versionMajor);
+	Serial.println(SystemParameters.versionMinor);
+	Serial.println(SystemParameters.versionPatch);
+	for (uint8_t i = 0; i < MACHINE_NAME_SIZE; i++)
+	{
+		Serial.println(SystemParameters.companyName[i]);
+	}
+	for (uint8_t i = 0; i < 4; i++)
+	{
+		Serial.println(SystemParameters.machineIP[i]);
+	}
+	Serial.println(SystemParameters.leftErrorCount);
+	Serial.println(SystemParameters.rightErrorCount);
+	Serial.println(SystemParameters.brushErrorCount);
+	Serial.println(SystemParameters.controllerErrorCount);
+	Serial.println(SystemParameters.leftRampUp);
+	Serial.println(SystemParameters.leftRampDown);
+	Serial.println(SystemParameters.leftMinSpeed);
+	Serial.println(SystemParameters.leftMaxSpeed);
+	Serial.println(SystemParameters.rightRampUp);
+	Serial.println(SystemParameters.rightRampDown);
+	Serial.println(SystemParameters.rightMinSpeed);
+	Serial.println(SystemParameters.rightMaxSpeed);
+	Serial.println(SystemParameters.brushRampUp);
+	Serial.println(SystemParameters.brushRampDown);
+	Serial.println(SystemParameters.brushMinSpeed);
+	Serial.println(SystemParameters.brushMaxSpeed);
+	Serial.println(SystemParameters.joystickMiddleValue);
+	Serial.println(SystemParameters.joystickDeadZone);
+	Serial.println(SystemParameters.joystickMinValue);
+	Serial.println(SystemParameters.joystickMaxValue);
+	Serial.println(SystemParameters.potantiometerMinValue);
+	Serial.println(SystemParameters.potantiometerMaxValue);
 }

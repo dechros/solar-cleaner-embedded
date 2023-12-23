@@ -11,6 +11,8 @@
 void InitCANBus(void);
 void CheckCANMessage(void);
 void RemoteStart(void);
+void UpdateCANAnalogModule(void);
+void SetAnalogValues(uint16_t value, MotorPosition_t position);
 
 typedef union
 {

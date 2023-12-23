@@ -37,7 +37,7 @@ public:
     void Stop(void);
     uint8_t CheckError(void);
     void SetTargetDirection(MotorDirectionType_t direction);
-    void SetTargetSpeed(uint8_t speed);
+    void SetTargetSpeed(uint16_t speed);
     void RunRampSupport(void);
     void UpdateMotorParameters(void);
 
@@ -50,16 +50,14 @@ private:
     uint8_t errorPin;
     uint8_t minMotorSpeed;
     uint8_t maxMotorSpeed;
-    uint8_t rampUpSpeed;
-    uint8_t rampDownSpeed;
+    uint16_t rampUpSpeed;
+    uint16_t rampDownSpeed;
     MotorDirectionType_t defaultDirection;
     MotorDirectionType_t targetDirection;
 	MotorDirectionType_t currentDirection;
-	uint8_t targetSpeed;
-	int16_t currentSpeed;
+	uint16_t targetSpeed;
+	int32_t currentSpeed;
     bool stopped = false;
-
-    MotorPosition_t GetMotorPosition(void);
 };
 
 #endif /* _MOTOR_H_ */

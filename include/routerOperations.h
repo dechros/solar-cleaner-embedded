@@ -9,15 +9,11 @@
 #define TCP_MESSAGE_FIRST_BYTE  	'T'
 #define TCP_MESSAGE_HEADER      	"TCP"
 
-typedef enum
-{
-    POSITIVE_COOR,
-    NEGATIVE_COOR
-}CoordinateType_t;
+#define MAX_SPEED 				255
+#define MAX_HIPOTENUS_VALUE		127
 
 void InitRouterCommunication(void);
 void CheckTCPMessage(void);
-uint8_t MapAnalogValueToSpeed(uint8_t valueToMap, CoordinateType_t type, double angleMultiplier);
 
 typedef struct
 {

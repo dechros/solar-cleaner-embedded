@@ -11,6 +11,7 @@
 
 #include "motor.h"
 #include "globals.h"
+#include "CANOperations.h"
 
 Motor::Motor(MotorPosition_t position)
 {
@@ -68,27 +69,7 @@ void Motor::Init()
     targetDirection = STOP;
     defaultDirection = STOP;
 
-    if (motorPosition == LEFT_TRACK)
-    {
-        minMotorSpeed = SystemParameters.leftMinSpeed;
-        maxMotorSpeed = SystemParameters.leftMaxSpeed;
-        rampUpSpeed   = SystemParameters.leftRampUp;
-        rampDownSpeed = SystemParameters.leftRampDown;
-    }
-    else if (motorPosition == RIGHT_TRACK)
-    {
-        minMotorSpeed = SystemParameters.rightMinSpeed;
-        maxMotorSpeed = SystemParameters.rightMaxSpeed;
-        rampUpSpeed   = SystemParameters.rightRampUp;
-        rampDownSpeed = SystemParameters.rightRampDown;
-    }
-    else
-    {
-        minMotorSpeed = SystemParameters.brushMinSpeed;
-        maxMotorSpeed = SystemParameters.brushMaxSpeed;
-        rampUpSpeed   = SystemParameters.brushRampUp;
-        rampDownSpeed = SystemParameters.brushRampDown;
-    }
+    UpdateMotorParameters();
 }
 
 void Motor::Stop()
@@ -123,20 +104,13 @@ void Motor::SetTargetDirection(MotorDirectionType_t direction)
     targetDirection = direction;
 }
 
-void Motor::SetTargetSpeed(uint8_t speed)
+void Motor::SetTargetSpeed(uint16_t speed)
 {
     targetSpeed = speed;
 }
 
 void Motor::RunRampSupport()
 {
-    /* Check for max speed */
-    uint8_t value = map(targetSpeed, 0, 255, 0, 100);
-    if (value > maxMotorSpeed)
-    {
-        targetSpeed = map(maxMotorSpeed, 0, 100, 0, 255);
-    }
-    
     if (targetDirection == currentDirection)
     {
         if (targetSpeed > currentSpeed)
@@ -146,7 +120,7 @@ void Motor::RunRampSupport()
             {
                 currentSpeed = targetSpeed;
             }
-            analogWrite(speedControlPin, (uint8_t)currentSpeed);
+            SetAnalogValues(currentSpeed, motorPosition);
         }
         else if (targetSpeed < currentSpeed)
         {
@@ -155,7 +129,7 @@ void Motor::RunRampSupport()
             {
                 currentSpeed = targetSpeed;
             }
-            analogWrite(speedControlPin, (uint8_t)currentSpeed);
+            SetAnalogValues(currentSpeed, motorPosition);
         }
     }
     else
@@ -165,7 +139,7 @@ void Motor::RunRampSupport()
         {
             currentSpeed = 0;
         }
-        analogWrite(speedControlPin, (uint8_t)currentSpeed);
+        SetAnalogValues(currentSpeed, motorPosition);
         if (currentSpeed == 0)
         {
             if (targetDirection == FORWARD)
@@ -197,21 +171,21 @@ void Motor::UpdateMotorParameters(void)
     {
         minMotorSpeed = SystemParameters.leftMinSpeed;
         maxMotorSpeed = SystemParameters.leftMaxSpeed;
-        rampUpSpeed   = SystemParameters.leftRampUp;
-        rampDownSpeed = SystemParameters.leftRampDown;
+        rampUpSpeed   = SystemParameters.leftRampUp * 100;
+        rampDownSpeed = SystemParameters.leftRampDown * 100;
     }
     else if (motorPosition == RIGHT_TRACK)
     {
         minMotorSpeed = SystemParameters.rightMinSpeed;
         maxMotorSpeed = SystemParameters.rightMaxSpeed;
-        rampUpSpeed   = SystemParameters.rightRampUp;
-        rampDownSpeed = SystemParameters.rightRampDown;
+        rampUpSpeed   = SystemParameters.rightRampUp * 100;
+        rampDownSpeed = SystemParameters.rightRampDown * 100;
     }
     else
     {
         minMotorSpeed = SystemParameters.brushMinSpeed;
         maxMotorSpeed = SystemParameters.brushMaxSpeed;
-        rampUpSpeed   = SystemParameters.brushRampUp;
-        rampDownSpeed = SystemParameters.brushRampDown;
+        rampUpSpeed   = SystemParameters.brushRampUp * 100;
+        rampDownSpeed = SystemParameters.brushRampDown * 100;
     }
 }
