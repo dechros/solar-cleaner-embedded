@@ -20,7 +20,6 @@
 
 void setup()
 {
-	Serial.begin(9600);
 	InitPins();
 	InitParameters();
 	WaterPumpHandler.Init();
