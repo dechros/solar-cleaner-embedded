@@ -43,7 +43,6 @@ bool DetectErrors(void)
     }
     if (controllerErrorCurrentState == true && controllerErrorOldState == false)
     {
-        Serial.println("Controller Error!");
         LogError(CONTROLLER_ERROR);
         retVal = true;
     }
