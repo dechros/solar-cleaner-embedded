@@ -65,29 +65,24 @@ static bool ReceiveACK()
 
 void CheckMaintenanceMessages(void)
 {
-    if(ROUTER_SERIAL.available() >= 5)
+    if(ROUTER_SERIAL.available() >= 3)
     {
-        if (ROUTER_SERIAL.peek() == 'G' && ROUTER_SERIAL.available() >= 5)
+        if (ROUTER_SERIAL.peek() == 'G' && ROUTER_SERIAL.available() >= 3)
         {
-            uint8_t message[5] = {0};
-            ROUTER_SERIAL.readBytes(message, 5);
-            if (strncmp((const char*)message, GET_MACHINE_NAME_MESSAGE, 5) == 0)
+            uint8_t message[3] = {0};
+            ROUTER_SERIAL.readBytes(message, 3);
+            if (strncmp((const char*)message, GET_PARAMETERS_MESSAGE, 3) == 0)
             {
-                uint8_t name[MACHINE_NAME_SIZE] = {0};
-                ReadMachineNameFromEEPROM(name);
-                ROUTER_SERIAL.write(name, MACHINE_NAME_SIZE);
-            }
-            else if (strncmp((const char*)message, GET_PARAMETERS_MESSAGE, 5) == 0)
-            {
+                ROUTER_SERIAL.write(GET_PARAMETERS_ACK, 7);
                 Parameters_t parameters = ReadParametersFromEEPROM();
                 ROUTER_SERIAL.write((uint8_t*)&parameters, sizeof(Parameters_t));
-            }            
+            }          
         }
-        else if (ROUTER_SERIAL.peek() == 'S' && ROUTER_SERIAL.available() >= 5)
+        else if (ROUTER_SERIAL.peek() == 'S' && ROUTER_SERIAL.available() >= 3)
         {
-            uint8_t message[5] = {0};
-            ROUTER_SERIAL.readBytes(message, 5);
-            if (strncmp((const char*)message, SET_PARAMETERS_MESSAGE, 5) == 0)
+            uint8_t message[3] = {0};
+            ROUTER_SERIAL.readBytes(message, 3);
+            if (strncmp((const char*)message, SET_PARAMETERS_MESSAGE, 3) == 0)
             {
                 bool timeout = true;
                 uint8_t offsetIndex = 0;
@@ -117,7 +112,7 @@ void CheckMaintenanceMessages(void)
                         LeftTrackMotor.UpdateMotorParameters();
                         RightTrackMotor.UpdateMotorParameters();
                         BrushesMotor.UpdateMotorParameters();
-                        ROUTER_SERIAL.write(ACK_MESSAGE, 3);
+                        ROUTER_SERIAL.write(SET_PARAMETERS_ACK, 7);
                         break;
                     }
                     delay(1);
@@ -136,25 +131,22 @@ void CheckMaintenanceMessages(void)
             missingMessageDiscardCount++;
             if (missingMessageDiscardCount == 100)
             {
-                Serial.println("Missing Message Discarded");
                 ClearMessageBuffer();
             }
             
         }
         else
         {
-            Serial.println("Discard One Byte");
             ROUTER_SERIAL.read();
         }
     }
-    else if(ROUTER_SERIAL.available() < 5 && ROUTER_SERIAL.available() > 0)
+    else if(ROUTER_SERIAL.available() < 3 && ROUTER_SERIAL.available() > 0)
     {
         static uint8_t missingMessageDiscardCount = 0;
         delay(1);
         missingMessageDiscardCount++;
         if (missingMessageDiscardCount == 100)
         {
-            Serial.println("Half Message Cleared");
             ClearMessageBuffer();
         }
     }
@@ -167,3 +159,43 @@ static void ClearMessageBuffer()
         ROUTER_SERIAL.read();
     }
 }
+
+#if 0
+void PrintParameters()
+{
+	Serial.println(SystemParameters.controlValue);
+	Serial.println(SystemParameters.versionMajor);
+	Serial.println(SystemParameters.versionMinor);
+	Serial.println(SystemParameters.versionPatch);
+	for (uint8_t i = 0; i < MACHINE_NAME_SIZE; i++)
+	{
+		Serial.println(SystemParameters.companyName[i]);
+	}
+	for (uint8_t i = 0; i < 4; i++)
+	{
+		Serial.println(SystemParameters.machineIP[i]);
+	}
+	Serial.println(SystemParameters.leftErrorCount);
+	Serial.println(SystemParameters.rightErrorCount);
+	Serial.println(SystemParameters.brushErrorCount);
+	Serial.println(SystemParameters.controllerErrorCount);
+	Serial.println(SystemParameters.leftRampUp);
+	Serial.println(SystemParameters.leftRampDown);
+	Serial.println(SystemParameters.leftMinSpeed);
+	Serial.println(SystemParameters.leftMaxSpeed);
+	Serial.println(SystemParameters.rightRampUp);
+	Serial.println(SystemParameters.rightRampDown);
+	Serial.println(SystemParameters.rightMinSpeed);
+	Serial.println(SystemParameters.rightMaxSpeed);
+	Serial.println(SystemParameters.brushRampUp);
+	Serial.println(SystemParameters.brushRampDown);
+	Serial.println(SystemParameters.brushMinSpeed);
+	Serial.println(SystemParameters.brushMaxSpeed);
+	Serial.println(SystemParameters.joystickMiddleValue);
+	Serial.println(SystemParameters.joystickDeadZone);
+	Serial.println(SystemParameters.joystickMinValue);
+	Serial.println(SystemParameters.joystickMaxValue);
+	Serial.println(SystemParameters.potantiometerMinValue);
+	Serial.println(SystemParameters.potantiometerMaxValue);
+}
+#endif

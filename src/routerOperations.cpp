@@ -90,6 +90,7 @@ void CheckTCPMessage()
                 {
                     ParseTCPMessage(readTCPMessage);
                     ROUTER_SERIAL.write(ACK_MESSAGE, 3);
+                    Serial.println("ACK Sent!");
                 }
                 else
                 {
