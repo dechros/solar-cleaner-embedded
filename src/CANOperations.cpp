@@ -3,9 +3,12 @@
 #include "pinOperations.h"
 #include "waterPump.h"
 #include "mcp_can.h"
+#include "sensorOperations.h"
 
 #define RPM_MAX_SPEED (5)
 #define RPM_MIN_SPEED (1)
+
+#define CAN_ANALOG_MODULE_OFFSET		500
 
 MCP_CAN CAN(SPI_CS_PIN);
 Message_t CANMessage;
@@ -27,16 +30,16 @@ void SetAnalogValues(uint16_t value, MotorPosition_t position)
 {
 	if (position == LEFT_TRACK)
 	{
-		analogValues[0] = value;
+		analogValues[0] = value + CAN_ANALOG_MODULE_OFFSET;
 	}
 	else if (position == RIGHT_TRACK)
 	{
-		analogValues[1] = value;
+		analogValues[1] = value + CAN_ANALOG_MODULE_OFFSET;
 	}
 	else if (position == BRUSHES)
 	{
-		analogValues[2] = value;
-		analogValues[3] = value;
+		analogValues[2] = value + CAN_ANALOG_MODULE_OFFSET;
+		analogValues[3] = value + CAN_ANALOG_MODULE_OFFSET;
 	}
 }
 
@@ -170,6 +173,15 @@ void CheckCANMessage()
 						WaterPumpHandler.Request(TOGGLE);
 					}
 					waterPumpButtonOldState = CANMessage.byte3.waterPumpButton;
+				}
+
+				if (CANMessage.byte3.sensorActive == 1)
+				{
+					sensorReadActive = true;
+				}
+				else
+				{
+					sensorReadActive = false;
 				}
 			}
 		}

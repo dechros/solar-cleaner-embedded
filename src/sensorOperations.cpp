@@ -11,6 +11,8 @@
 
 #include "sensorOperations.h"
 
+bool sensorReadActive = false;
+
 bool DetectSensorActivity()
 {
     bool retVal = false;

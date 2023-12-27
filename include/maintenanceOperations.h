@@ -1,7 +1,7 @@
 #ifndef _MAINTENANCE_OPERATIONS_H_
 #define _MAINTENANCE_OPERATIONS_H_
 
-#define MESSAGE_TIMEOUT_MS                      1000
+#define MESSAGE_TIMEOUT_MS                      5000
 
 #define MAINTENANCE_MODE_ACTIVE_MESSAGE         "M_A*"
 #define MAINTENANCE_MODE_DEACTIVE_MESSAGE       "M_D*"

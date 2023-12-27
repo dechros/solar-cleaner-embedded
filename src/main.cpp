@@ -54,7 +54,8 @@ void loop()
 
 	if (updateMotorsParameters == true)
 	{
-		if (DetectErrors() == true || DetectSensorActivity() == true || CheckMaintenancePin() == HIGH)
+		if (DetectErrors() == true || CheckMaintenancePin() == HIGH || 
+			(sensorReadActive == true && DetectSensorActivity() == true))
 		{
 			SystemStop();
 		}

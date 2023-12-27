@@ -15,6 +15,8 @@
 #include "Arduino.h"
 #include "pinDefinitions.h"
 
+extern bool sensorReadActive;
+
 /**
  * @brief Reads the distance sensor outputs on the machine.
  * 
