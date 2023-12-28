@@ -8,11 +8,7 @@
 #include "maintenanceOperations.h"
 #include "sensorOperations.h"
 #include "CANOperations.h"
-
-#if CAN_MODE
-#else
 #include "routerOperations.h"
-#endif
 
 #define GSM_UPDATE_INTERVAL (100)
 #define ACCELERATION_SENSOR_FILTER (5)
@@ -28,11 +24,7 @@ void setup()
 	BrushesMotor.Init();
 	InitTimer();
 	InitCANBus();
-#if CAN_MODE
-#else
 	InitRouterCommunication();
-#endif
-
 }
 
 void loop()
