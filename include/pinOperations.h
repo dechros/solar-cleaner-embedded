@@ -58,40 +58,5 @@ void digitalWriteExtended(uint8_t pin, uint8_t val);
  */
 void MCP2515InterruptCallback(void);
 
-/**
- * @brief Encoder 1's A pin interrupt callback
- * 
- */
-void Encoder1InterruptACallback(void);
-
-/**
- * @brief Encoder 1's B pin interrupt callback
- * 
- */
-void Encoder1InterruptBCallback(void);
-
-/**
- * @brief Encoder 1's 0 pin interrupt callback
- * 
- */
-void Encoder1Interrupt0Callback(void);
-
-/**
- * @brief Encoder 2's A pin interrupt callback
- * 
- */
-void Encoder2InterruptACallback(void);
-
-/**
- * @brief Encoder 2's B pin interrupt callback
- * 
- */
-void Encoder2InterruptBCallback(void);
-
-/**
- * @brief Encoder 2's 0 pin interrupt callback
- * 
- */
-void Encoder2Interrupt0Callback(void);
 
 #endif /* _PIN_OPERATIONS_H_ */

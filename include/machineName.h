@@ -5,6 +5,6 @@
 #define MACHINE_NAME_SIZE                   50
 
 /* Must not be bigger than 50 char */
-const char MACHINE_NAME[MACHINE_NAME_SIZE + 1] = "Test Machine Name";
+const char MACHINE_NAME[MACHINE_NAME_SIZE + 1] = "Test Machine Name 31";
 
 #endif /* _MACHINE_NAME_H_ */

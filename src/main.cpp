@@ -28,7 +28,6 @@ void setup()
 	BrushesMotor.Init();
 	InitTimer();
 	InitCANBus();
-
 #if CAN_MODE
 #else
 	InitRouterCommunication();
@@ -51,7 +50,6 @@ void loop()
 		CheckTCPMessage();
 	}
 #endif
-
 	if (updateMotorsParameters == true)
 	{
 		if (DetectErrors() == true || CheckMaintenancePin() == HIGH || 

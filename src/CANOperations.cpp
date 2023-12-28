@@ -140,7 +140,7 @@ void CheckCANMessage()
 
 				if (CANMessage.byte7.potantiometerValue > SystemParameters.joystickDeadZone)
 				{
-					uint16_t mappedValue = map(CANMessage.byte8.paddleDValue,
+					uint16_t mappedValue = map(CANMessage.byte7.potantiometerValue,
 											   SystemParameters.potantiometerMinValue,
 											   SystemParameters.potantiometerMaxValue,
 											   100 * SystemParameters.brushMinSpeed,
