@@ -1,3 +1,3 @@
-# solarCleanerEmbedded
+# solar-cleaner-embedded
 
-Embedded software for the remote controlled solar cleaner machine.
+Embedded firmware for the solar cleaner machine.
