@@ -1,2 +1,3 @@
 # solarCleanerEmbedded
-This is the embedded software repository for the remote controlled solar cleaner machine.
+
+Embedded software for the remote controlled solar cleaner machine.
