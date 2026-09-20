@@ -17,7 +17,7 @@ bool IsRouterMaintenanceActive(void)
 
 uint8_t CheckMaintenancePin(void)
 {
-    return digitalRead(MAINTENANCE_PIN);  
+    return digitalRead(MAINTENANCE_PIN);
 }
 
 void ActivateRouterMaintenanceMode(void)
@@ -38,7 +38,6 @@ void DeactivateRouterMaintenanceMode(void)
         maintenanceActive = false;
     }
 }
-
 
 static bool ReceiveACK()
 {
@@ -76,7 +75,7 @@ void CheckMaintenanceMessages(void)
                 ROUTER_SERIAL.write(GET_PARAMETERS_ACK, 7);
                 Parameters_t parameters = ReadParametersFromEEPROM();
                 ROUTER_SERIAL.write((uint8_t*)&parameters, sizeof(Parameters_t));
-            }          
+            }
         }
         else if (ROUTER_SERIAL.peek() == 'S' && ROUTER_SERIAL.available() >= 3)
         {
@@ -133,7 +132,7 @@ void CheckMaintenanceMessages(void)
             {
                 ClearMessageBuffer();
             }
-            
+
         }
         else
         {

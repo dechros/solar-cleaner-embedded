@@ -2,15 +2,12 @@
 #include "waterPump.h"
 #include "pinDefinitions.h"
 
-
 WaterPump::WaterPump()
 {
-    /* Empty Constructor */   
 }
 
 WaterPump::~WaterPump()
 {
-    /* Empty Destructor */  
 }
 
 void WaterPump::Init()

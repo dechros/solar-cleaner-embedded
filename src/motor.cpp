@@ -85,22 +85,6 @@ uint8_t Motor::CheckError()
 
 void Motor::SetTargetDirection(MotorDirectionType_t direction)
 {
-    /**
-     * @note: Target direction actually refers to
-     *        motors rotation direction. Clockwise or Counter-clockwise
-     *        FORWARD => Clockwise rotation
-     *        REVERSE => Counter-clockwise rotation
-     *
-     *        So when we want to move machine forward. We need to make
-     *        Left Motor Direction = FORWARD
-     *        Right Motor Direction = REVERSE
-     *
-     *        It actually makes sense because when right motor turns clockwise
-     *        it moves machine to reverse. But when left motor turns clockwise
-     *        it moves machine to forward.
-     *
-     * @summary: Right track direction means the opposite direction for machine
-     */
     targetDirection = direction;
 }
 

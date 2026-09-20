@@ -44,12 +44,12 @@ void loop()
 #endif
 	if (updateMotorsParameters == true)
 	{
-		if (DetectErrors() == true || CheckMaintenancePin() == HIGH || 
+		if (DetectErrors() == true || CheckMaintenancePin() == HIGH ||
 			(sensorReadActive == true && DetectSensorActivity() == true))
 		{
 			SystemStop();
 		}
-		
+
 		WaterPumpHandler.ProcessRequests();
 		LeftTrackMotor.RunRampSupport();
 		RightTrackMotor.RunRampSupport();

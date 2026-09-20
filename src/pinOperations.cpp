@@ -1,13 +1,13 @@
 /**
  * @file pinOperations.cpp
  * @author Talha Cetin (talhacetin96@hotmail.com)
- * @brief This source file contains pin related functions, 
+ * @brief This source file contains pin related functions,
  *        non-mapped and standart pin interrupt handlers.
  * @version 0.1
  * @date 2023-05-12
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 
 #include "globals.h"
@@ -68,7 +68,7 @@ int digitalReadExtended(uint8_t pin)
         uint8_t port = digitalPinToPort(PORT_J_FIRST_PIN);
 
         uint8_t multiplier = pow(2, (pin - 69));
-        if (*portInputRegister(port) & (bit * multiplier))   
+        if (*portInputRegister(port) & (bit * multiplier))
         {
             return HIGH;
         }
@@ -108,7 +108,6 @@ void digitalWriteExtended(uint8_t pin, uint8_t val)
 
 void pinModeExtended(uint8_t pin, uint8_t ioMode)
 {
-    /* Only used for non-mapped MCP Interrupt pin */
     if (ioMode == INPUT)
     {
         DDRJ &= ~(1 << pin);

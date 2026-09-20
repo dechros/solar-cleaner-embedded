@@ -12,7 +12,7 @@
 
 MCP_CAN CAN(SPI_CS_PIN);
 Message_t CANMessage;
-uint8_t RPM_SPEED = 3; /* 1 - 5 */
+uint8_t RPM_SPEED = 3;
 
 uint16_t analogValues[4];
 
@@ -45,7 +45,6 @@ void SetAnalogValues(uint16_t value, MotorPosition_t position)
 
 void UpdateCANAnalogModule()
 {
-	/* TODO: Test with PCAN */
 	CAN.sendMsgBuf(0x455, 8, (uint8_t*)&analogValues);
 }
 
@@ -161,7 +160,6 @@ void CheckCANMessage()
 					BrushesMotor.SetTargetDirection(REVERSE);
 				}
 
-				/* TODO: Check emergency switch bit if water pump does not work */
 				if (CANMessage.byte1.rcStopRelaysOpened == 1)
 				{
 					WaterPumpHandler.Request(TURN_OFF);

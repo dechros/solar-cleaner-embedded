@@ -113,23 +113,23 @@ void SetDefaultParametersToEEPROM(void)
     parameters.rightErrorCount          = 0;
     parameters.brushErrorCount          = 0;
     parameters.controllerErrorCount     = 0;
-    parameters.leftRampUp               = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
-    parameters.leftRampDown             = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
+    parameters.leftRampUp               = 5;
+    parameters.leftRampDown             = 5;
     parameters.leftMinSpeed             = 0;
     parameters.leftMaxSpeed             = 100;
-    parameters.rightRampUp              = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
-    parameters.rightRampDown            = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
+    parameters.rightRampUp              = 5;
+    parameters.rightRampDown            = 5;
     parameters.rightMinSpeed            = 0;
     parameters.rightMaxSpeed            = 100;
-    parameters.brushRampUp              = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
-    parameters.brushRampDown            = 5; /* 1 - 10 */ /* 250ms surucu rampa parametreleri */
+    parameters.brushRampUp              = 5;
+    parameters.brushRampDown            = 5;
     parameters.brushMinSpeed            = 0;
     parameters.brushMaxSpeed            = 100;
-    parameters.joystickMiddleValue      = 127;    
-    parameters.joystickDeadZone         = 0; 
-    parameters.joystickMinValue         = 0; 
-    parameters.joystickMaxValue         = 255; 
-    parameters.potantiometerMinValue    = 0;        
-    parameters.potantiometerMaxValue    = 255;    
+    parameters.joystickMiddleValue      = 127;
+    parameters.joystickDeadZone         = 0;
+    parameters.joystickMinValue         = 0;
+    parameters.joystickMaxValue         = 255;
+    parameters.potantiometerMinValue    = 0;
+    parameters.potantiometerMaxValue    = 255;
     WriteParametersToEEPROM(parameters);
 }

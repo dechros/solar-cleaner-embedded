@@ -81,25 +81,22 @@ void CheckTCPMessage()
         {
             TCPMessage_t readTCPMessage;
             ROUTER_SERIAL.readBytes((uint8_t *)&readTCPMessage, sizeof(TCPMessage_t));
-            /* Check the "TCP Message Header" */
+
             if (strncmp((const char *)&readTCPMessage, TCP_MESSAGE_HEADER, 3) == 0)
             {
-                /* Control the checksum of message */
                 bool result = ControlChecksum((uint8_t *)&readTCPMessage, sizeof(TCPMessage_t));
                 if (result == true)
                 {
                     ParseTCPMessage(readTCPMessage);
                     ROUTER_SERIAL.write(ACK_MESSAGE, 3);
-                    //Serial.println("ACK Sent!");
+
                 }
                 else
                 {
-                    /* Checksum Error! Do not parse wrong message */
                 }
             }
             else
             {
-                /* Unknown header */
             }
         }
         else if (readData == 'T' && tcpBufferSize < (int)sizeof(TCPMessage_t))
@@ -110,13 +107,13 @@ void CheckTCPMessage()
             {
                 bufferClearCounter = 0;
                 ROUTER_SERIAL.read();
-                /* Half Message! Discarded! */
+
             }
         }
         else
         {
             ROUTER_SERIAL.read();
-            /* Unknown header byte discard */
+
         }
     }
 }
@@ -130,7 +127,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     if (((joystickXSigned < SystemParameters.joystickDeadZone) && (joystickXSigned > -SystemParameters.joystickDeadZone)) &&
         ((joystickYSigned < SystemParameters.joystickDeadZone) && (joystickYSigned > -SystemParameters.joystickDeadZone)))
     {
-        /* No Movement */
         trackInfo.rightTrackDirection = REVERSE;
         trackInfo.leftTrackDirection = FORWARD;
         trackInfo.rightTrackSpeed = 0;
@@ -139,7 +135,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     else if ((joystickXSigned > SystemParameters.joystickDeadZone) &&
              ((joystickYSigned < SystemParameters.joystickDeadZone) && (joystickYSigned > -SystemParameters.joystickDeadZone)))
     {
-        /* Rotate machine clockwise (Both Tracks Maximum) */
         trackInfo.rightTrackDirection = FORWARD;
         trackInfo.leftTrackDirection = FORWARD;
         trackInfo.rightTrackSpeed = (uint8_t)(MAX_SPEED * ((double)joystickXSigned / MAX_HIPOTENUS_VALUE));
@@ -148,7 +143,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     else if ((joystickXSigned < -SystemParameters.joystickDeadZone) &&
              ((joystickYSigned < SystemParameters.joystickDeadZone) && (joystickYSigned > -SystemParameters.joystickDeadZone)))
     {
-        /* Rotate machine counter-clockwise (Both Tracks Maximum) */
         trackInfo.rightTrackDirection = REVERSE;
         trackInfo.leftTrackDirection = REVERSE;
         trackInfo.rightTrackSpeed = (uint8_t)(MAX_SPEED * ((double)abs(joystickXSigned) / MAX_HIPOTENUS_VALUE));
@@ -157,7 +151,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     else if ((joystickYSigned > SystemParameters.joystickDeadZone) &&
              ((joystickXSigned < SystemParameters.joystickDeadZone) && (joystickXSigned > -SystemParameters.joystickDeadZone)))
     {
-        /* Move machine forward (Both Tracks Maximum) */
         trackInfo.rightTrackDirection = REVERSE;
         trackInfo.leftTrackDirection = FORWARD;
         trackInfo.rightTrackSpeed = (uint8_t)(MAX_SPEED * ((double)joystickYSigned / MAX_HIPOTENUS_VALUE));
@@ -166,7 +159,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     else if ((joystickYSigned < -SystemParameters.joystickDeadZone) &&
              ((joystickXSigned < SystemParameters.joystickDeadZone) && (joystickXSigned > -SystemParameters.joystickDeadZone)))
     {
-        /* Move machine reverse (Both Tracks Maximum) */
         trackInfo.rightTrackDirection = FORWARD;
         trackInfo.leftTrackDirection = REVERSE;
         trackInfo.rightTrackSpeed = (uint8_t)(MAX_SPEED * ((double)abs(joystickYSigned) / MAX_HIPOTENUS_VALUE));
@@ -174,23 +166,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     }
     else if ((joystickXSigned > SystemParameters.joystickDeadZone) && (joystickYSigned > SystemParameters.joystickDeadZone))
     {
-        /**
-         * 1. Quadrant of coordinate system
-         *
-         * @brief   In the first quadrant of coordinate system
-         *          "right track" will make movement in both directions
-         *          depending on the angle of joystick to X axis.
-         *
-         * @example If you move joystick all the way up both tracks
-         *          will move forward. Which means closer to 90 degree
-         *          right track will start moving forward up until maximum.
-         *
-         *          But if you move joystick all the way right side,
-         *          left track will still go forward but right track will
-         *          go reverse for clockwise rotation. Which means closer to
-         *          0 degree right track will start moving reverse up until maximum
-         */
-
         double radian = atan((double)joystickYSigned / joystickXSigned);
         double degree = (180 * radian) / M_PI;
         if (degree > 45)
@@ -225,23 +200,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     }
     else if ((joystickXSigned < -SystemParameters.joystickDeadZone) && (joystickYSigned > SystemParameters.joystickDeadZone))
     {
-        /**
-         * 2. Quadrant of coordinate system
-         *
-         * @brief   In the second quadrant of coordinate system
-         *          "left track" will make movement in both directions
-         *          depending on the angle of joystick to X axis.
-         *
-         * @example If you move joystick all the way up both tracks
-         *          will move forward. Which means closer to 90 degree
-         *          left track will start moving forward up until maximum.
-         *
-         *          But if you move joystick all the way left side,
-         *          right track will still go forward but left track will
-         *          go reverse for counter-clockwise rotation. Which means closer to
-         *          0 degree left track will start moving reverse up until maximum
-         */
-
         double radian = atan((double)joystickYSigned / abs(joystickXSigned));
         double degree = (180 * radian) / M_PI;
         if (degree > 45)
@@ -276,23 +234,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     }
     else if ((joystickXSigned < -SystemParameters.joystickDeadZone) && (joystickYSigned < -SystemParameters.joystickDeadZone))
     {
-        /**
-         * 3. Quadrant of coordinate system
-         *
-         * @brief   In the third quadrant of coordinate system
-         *          "right track" will make movement in both directions
-         *          depending on the angle of joystick to X axis.
-         *
-         * @example If you move joystick all the way down both tracks
-         *          will move reverse. Which means closer to 90 degree
-         *          right track will start moving reverse up until maximum.
-         *
-         *          But if you move joystick all the way left side,
-         *          left track will still go reverse but right track will
-         *          go forward for counter-clockwise rotation. Which means closer to
-         *          0 degree right track will start moving forward up until maximum
-         */
-
         double radian = atan((double)abs(joystickYSigned) / abs(joystickXSigned));
         double degree = (180 * radian) / M_PI;
         if (degree > 45)
@@ -327,23 +268,6 @@ TrackInfo_t JoystickAlgorithm(uint8_t joystickX, uint8_t joystickY)
     }
     else if ((joystickXSigned > SystemParameters.joystickDeadZone) && (joystickYSigned < -SystemParameters.joystickDeadZone))
     {
-        /**
-         * 4. Quadrant of coordinate system
-         *
-         * @brief   In the forth quadrant of coordinate system
-         *          "left track" will make movement in both directions
-         *          depending on the angle of joystick to X axis.
-         *
-         * @example If you move joystick all the way down both tracks
-         *          will move reverse. Which means closer to 90 degree
-         *          left track will start moving reverse up until maximum.
-         *
-         *          But if you move joystick all the way right side,
-         *          right track will still go reverse but left track will
-         *          go forward for clockwise rotation. Which means closer to
-         *          0 degree left track will start moving forward up until maximum
-         */
-
         double radian = atan((double)abs(joystickYSigned) / joystickXSigned);
         double degree = (180 * radian) / M_PI;
         if (degree > 45)
